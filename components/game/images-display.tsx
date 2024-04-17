@@ -7,14 +7,19 @@ export default function ImagesDisplay({ images }: { images: string[] }) {
       <div className="border p-0.5 m-2 rounded-lg w-96">
         <div className="grid grid-cols-2">
           {images.map((image, index) => (
-            <div key={index} className=" p-0.5 col-span-1">
+            <div
+              key={index}
+              className={` p-0.5  ${
+                images.length == 1 ? "col-span-2" : "col-span-1"
+              }`}
+            >
               <Dialog>
                 <DialogTrigger>
                   <Image
                     src={image}
                     alt={image}
-                    width={200}
-                    height={200}
+                    width={images.length == 1 ? 400 : 200}
+                    height={images.length == 1 ? 400 : 200}
                     className="rounded-lg"
                   />
                 </DialogTrigger>

@@ -22,7 +22,7 @@ const words = [
   "Word 7",
   "Loremipsumelit.",
 ];
-const correctWords = ["Word 1", "Word 2", "Word 3", "Word 4"];
+const correctWords = ["Word 1", "Word 2", "Word 3", "Word 4", "Word 5"];
 
 export default function Home() {
   const [isCorrect, setIsCorrect] = useState(false);
