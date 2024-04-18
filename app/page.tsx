@@ -2,6 +2,7 @@
 import Image from "next/image";
 import ImagesDisplay from "@/components/game/images-display";
 import WordSelector from "@/components/game/word-selector";
+import AccountMenu from "@/components/account/account-menu";
 
 import { useState, useEffect } from "react";
 
@@ -29,6 +30,7 @@ export default function Home() {
 
   return (
     <div>
+      <AccountMenu />
       <div className="flex flex-col items-center justify-center h-screen">
         <ImagesDisplay images={images} />
         <WordSelector
