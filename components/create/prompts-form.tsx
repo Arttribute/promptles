@@ -26,6 +26,7 @@ export default function PromptsForm() {
           <div>
             {[...Array(promptFieldsCount)].map((_, index) => (
               <PromptField
+                key={index}
                 index={index}
                 prompts={prompts}
                 promptFieldsCount={promptFieldsCount}
