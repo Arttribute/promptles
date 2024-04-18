@@ -6,11 +6,13 @@ const { ObjectId } = mongoose.Schema.Types;
 
 export interface Promptle {
   game_id: object;
+  prompt_id: string;
   images: string[];
   promptle_words: string;
   solution: string;
   owner: object;
   featured: boolean;
+  status: string;
 }
 
 const PromptleSchema = new mongoose.Schema<Promptle>(
@@ -18,6 +20,10 @@ const PromptleSchema = new mongoose.Schema<Promptle>(
     game_id: {
       type: ObjectId,
       ref: Game,
+    },
+    prompt_id: {
+      type: String,
+      required: true,
     },
     images: {
       type: [String],
@@ -38,6 +44,10 @@ const PromptleSchema = new mongoose.Schema<Promptle>(
     featured: {
       type: Boolean,
       default: false,
+    },
+    status: {
+      type: String,
+      default: "queued",
     },
   },
   { timestamps: true }
