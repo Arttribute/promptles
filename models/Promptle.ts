@@ -8,7 +8,7 @@ export interface Promptle {
   game_id: object;
   prompt_id: string;
   images: string[];
-  promptle_words: string;
+  promptle_words: string[];
   solution: string;
   owner: object;
   featured: boolean;
@@ -30,8 +30,8 @@ const PromptleSchema = new mongoose.Schema<Promptle>(
       default: [],
     },
     promptle_words: {
-      type: String,
-      required: true,
+      type: [String],
+      default: [],
     },
     solution: {
       type: String,
