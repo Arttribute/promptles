@@ -69,7 +69,7 @@ export default function AccountMenu() {
                       {" "}
                       <Coins className="w-4 h-4" />
                     </div>
-                    23
+                    {account.credits}
                     <div className="ml-2">
                       {" "}
                       <Link href="/buy" passHref className="font-semibold">
