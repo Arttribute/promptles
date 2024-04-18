@@ -1,12 +1,12 @@
-import { NextApiRequest } from "next";
 import dbConnect from "@/lib/dbConnect";
 import Promptle from "@/models/Promptle";
 import { NextResponse } from "next/server";
 
-export async function GET(request: NextApiRequest) {
+export async function GET(request: Request) {
   try {
     await dbConnect();
-    const { id } = request.query;
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     const promptle = await Promptle.findById(id)
       .populate("game_id")
       .populate("owner");
