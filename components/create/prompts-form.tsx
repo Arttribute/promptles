@@ -5,16 +5,84 @@ import PromptleField from "./promptle-field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import AddPromptField from "./add-prompt-field";
+import axios from "axios";
+import { User } from "@/models/User";
 
-export default function PromptsForm() {
+export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
+  const [gameTitle, setGameTitle] = useState(".");
+  const [description, setDescription] = useState(".");
   const [prompts, setPrompts] = useState<string[]>([]);
   const [decoys, setDecoys] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loadedAccount, setLoadedAccount] = useState(true);
+  const [numberOfImages, setNumberOfImages] = useState(1);
+  const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    setLoadedAccount(true);
+    setAccount(user);
     console.log("prompts", prompts);
     console.log("decoys", decoys);
   }, [prompts, decoys]);
+
+  async function onSubmit() {
+    setLoading(true);
+    try {
+      //create game
+      const gameData = {
+        game_title: gameTitle,
+        description: description,
+        owner: account?._id,
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/games`,
+        { gameData }
+      );
+      const createdGameData = res.data;
+
+      for (let i = 0; i < prompts.length; i++) {
+        //randomly shuffle decoy and add the solution
+        const words = decoys[i].split(" ");
+        const correctWords = prompts[i].split(" ");
+        words.push(...correctWords);
+        const shuffledWords = words.sort(() => Math.random() - 0.5);
+        const promptleData = {
+          game_id: createdGameData._id,
+          promptle_words: shuffledWords,
+          solution: prompts[i],
+          owner: account?._id,
+        };
+        let promptToken = ""; //TODO: replace with this `${tunedModel.modeldata.token} style` || "sks style";
+        const textToImageObject = {
+          text: `${prompts[i]} ${promptToken}`,
+          negative_prompt: "",
+          super_resolution: true,
+          face_correct: true,
+          num_images: 1,
+          callback: 0,
+        };
+        const promptCost = 5;
+        const totalCost = numberOfImages * promptCost * prompts.length;
+
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/promptles`,
+          {
+            promptleData,
+            textToImageObject,
+            modelId: "690204",
+            cost: totalCost,
+          }
+        );
+        const PromptResponse = res.data.newPrompt;
+      }
+    } catch (error) {
+      console.error("Error in API call:", error);
+    }
+  }
 
   return (
     <>
@@ -45,7 +113,9 @@ export default function PromptsForm() {
           setPromptFieldCount={setPromptFieldCount}
         />
         <div className="mt-2">
-          <Button className="mt-2 w-full">Create</Button>
+          <Button className="mt-2 w-full" onClick={onSubmit}>
+            Create
+          </Button>
         </div>
       </div>
     </>
