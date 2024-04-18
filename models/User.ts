@@ -8,6 +8,7 @@ export interface User extends mongoose.Document {
   name: string;
   description: string;
   picture: string;
+  credits: number;
 }
 
 const userSchema = new mongoose.Schema(
