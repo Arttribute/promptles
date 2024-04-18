@@ -18,6 +18,7 @@ export default function PromptleForm() {
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [numberOfImages, setNumberOfImages] = useState(1);
   const [account, setAccount] = useState<User | null>(null);
+  const [images, setImages] = useState<string[]>([]); // to test displaying generated images
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -58,12 +59,14 @@ export default function PromptleForm() {
         };
         let promptToken = ""; //TODO: replace with this `${tunedModel.modeldata.token} style` || "sks style";
         const textToImageObject = {
-          text: `${prompts[i]} ${promptToken}`,
-          negative_prompt: "",
-          super_resolution: true,
-          face_correct: true,
-          num_images: 1,
-          callback: 0,
+          text_prompts: [
+            {
+              text: `${prompts[i]} ${promptToken}`,
+            },
+          ],
+          cfg_scale: 7, // higher values keep your image closer to your prompt. Default: 7
+          steps: 30, // default 30
+          samples: 4, // num of images generated
         };
         const promptCost = 5;
         const totalCost = numberOfImages * promptCost * prompts.length;
@@ -73,14 +76,16 @@ export default function PromptleForm() {
           {
             promptleData,
             textToImageObject,
-            modelId: "690204",
             cost: totalCost,
           }
         );
-        const PromptResponse = res.data.newPrompt;
+        const PromptResponse = res.data.newPromptle;
+        setImages((prev) => [...prev, ...PromptResponse.images]);
       }
     } catch (error) {
       console.error("Error in API call:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -113,10 +118,26 @@ export default function PromptleForm() {
           setPromptFieldCount={setPromptFieldCount}
         />
         <div className="mt-2">
-          <Button className="mt-2 w-full" onClick={onSubmit}>
-            Create
+          <Button className="mt-2 w-full" onClick={onSubmit} disabled={loading}>
+            {loading ? "Loading..." : "Create"}
           </Button>
         </div>
+        {/* Section for testing purposes to display generated images. To be deleted */}
+        {images.length > 0 && (
+          <>
+            <div className="font-semibold mt-2">Generated Images</div>
+            <div className="flex flex-wrap">
+              {images.map((image, index) => (
+                <div key={index} className="w-1/4 p-2">
+                  <img
+                    src={`data:image/png;base64,${image}`}
+                    alt="Generated Image"
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </>
   );
