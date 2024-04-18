@@ -58,7 +58,7 @@ export default function WordSelector({
               selectedWords.length === correctWords.length
                 ? isCorrect
                   ? "border-green-500"
-                  : "border-red-500"
+                  : "border-red-500 animate-shake"
                 : "border-slate-500"
             } `}
             onClick={() => handleSelectedWordClick(word)}
