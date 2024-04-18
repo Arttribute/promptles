@@ -4,8 +4,7 @@ import User from "@/models/User";
 import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import Promptle from "@/models/Promptle";
-
-const API_KEY = process.env.ASTRIA_API_KEY;
+import { GenerationResponse } from "@/models/StableDiffuser";
 
 export async function GET() {
   try {
@@ -26,29 +25,35 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { promptleData, textToImageObject, modelId, cost } =
-    await request.json();
+  const engineId = "stable-diffusion-xl-1024-v1-0";
+  const { promptleData, textToImageObject, cost } = await request.json();
 
   try {
     await dbConnect();
+
+    if (!process.env.SD_API_KEY) throw new Error("Missing Stability API key.");
+    const stabilityApiHost =
+      process.env.SD_API_HOST ?? "https://api.stability.ai";
+
     const promptRes = await fetch(
-      `https://api.astria.ai/tunes/${modelId}/prompts`,
+      `${stabilityApiHost}/v1/generation/${engineId}/text-to-image`,
       {
         method: "POST",
         headers: {
-          Authorization: "Bearer " + API_KEY,
           "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${process.env.SD_API_KEY}`,
         },
         body: JSON.stringify(textToImageObject),
       }
     );
 
-    const text2Imageres = await promptRes.json();
-    console.log("text2image:", text2Imageres);
+    const text2Imageres: GenerationResponse = await promptRes.json();
 
     const newPromptle = await Promptle.create({
       ...promptleData,
-      prompt_id: text2Imageres.id.toString(),
+      prompt_id: Date.now().toString(), // this is random, SD doesn't have a prompt_id like Astria to save model
+      images: text2Imageres.artifacts.map((artifact) => artifact.base64), // base64 images
     });
 
     const user = await User.findByIdAndUpdate(
