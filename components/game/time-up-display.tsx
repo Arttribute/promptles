@@ -11,7 +11,7 @@ export default function TimeUpDisplay({
   return (
     <div className="w-full">
       <div className="p-2 flex flex-col items-center justify-center">
-        <p className="text-2xl font-semibold text-red-500">Time's up!</p>
+        <p className="text-2xl font-semibold text-red-500">Time is up!</p>
 
         <Button
           variant="outline"
