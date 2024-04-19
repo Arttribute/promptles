@@ -4,34 +4,26 @@ import { useEffect, useState } from "react";
 import ImagesDisplay from "@/components/game/images-display";
 import WordSelector from "@/components/game/word-selector";
 
-import PromptleTimer from "@/components/game/promptle-timer";
-
-export default function Promptle({ promptle }: { promptle: any }) {
+export default function Promptle({
+  promptle,
+  secondsLeft,
+}: {
+  promptle: any;
+  secondsLeft: number;
+}) {
   const [isCorrect, setIsCorrect] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(12);
 
   return (
-    <>
-      <div className="grid grid-cols-12 justify-center gap-2">
-        <div className=" col-span-10 flex flex-col items-center justify-center ">
-          <ImagesDisplay images={promptle.images} />
-          {secondsLeft > 0 && (
-            <WordSelector
-              words={promptle.promptle_words}
-              correctWords={promptle.solution.split(" ")}
-              isCorrect={isCorrect}
-              setIsCorrect={setIsCorrect}
-            />
-          )}
-        </div>
-        <div className="col-span-2 mt-6 ">
-          <PromptleTimer
-            initialSeconds={12}
-            secondsLeft={secondsLeft}
-            setSecondsLeft={setSecondsLeft}
-          />
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col items-center justify-cente">
+      <ImagesDisplay images={promptle.images} />
+      {secondsLeft > 0 && (
+        <WordSelector
+          words={promptle.promptle_words}
+          correctWords={promptle.solution.split(" ")}
+          isCorrect={isCorrect}
+          setIsCorrect={setIsCorrect}
+        />
+      )}
+    </div>
   );
 }

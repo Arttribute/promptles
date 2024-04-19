@@ -3,8 +3,14 @@ import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
 
+import { Button } from "@/components/ui/button";
+
 import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
+import PromptleTimer from "@/components/game/promptle-timer";
+import { set } from "mongoose";
+
+const givenTime = 10;
 
 export default function Game({ params }: { params: { id: string } }) {
   const [game, setGame] = useState(null);
@@ -12,6 +18,9 @@ export default function Game({ params }: { params: { id: string } }) {
   const [loadingPromptles, setLoadingPromptles] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [promptleUpdated, setPromptleUpdated] = useState(false);
+  const [currentPromptleIndex, setCurrentPromptleIndex] = useState(0);
+  const [promptleCounr, setPromptleCount] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(givenTime);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -31,6 +40,7 @@ export default function Game({ params }: { params: { id: string } }) {
     );
     const data = res.data;
     setGame(data);
+    setPromptleCount(data.promptles.length);
     setLoading(false);
   }
 
@@ -48,6 +58,13 @@ export default function Game({ params }: { params: { id: string } }) {
     }
     setLoadingPromptles(false);
   }
+
+  const handleNextPromptle = () => {
+    if (currentPromptleIndex < promptleCounr - 1) {
+      setCurrentPromptleIndex(currentPromptleIndex + 1);
+      setSecondsLeft(givenTime);
+    }
+  };
   async function getPromptleImagesAndUpdate(
     promptleId: string,
     promptId: string,
@@ -86,12 +103,34 @@ export default function Game({ params }: { params: { id: string } }) {
         {loading ? (
           <div>Loading...</div>
         ) : (
-          game &&
-          (game as any)?.promptles.map((promptle: any) => (
-            <div key={promptle._id}>
-              <Promptle promptle={promptle} />
-            </div>
-          ))
+          game && (
+            <>
+              <div className="grid grid-cols-12 gap-2">
+                <div className="col-span-10">
+                  {(game as any)?.promptles.map(
+                    (promptle: any, index: number) => (
+                      <div key={promptle._id} className="mt-4">
+                        {index === currentPromptleIndex && (
+                          <Promptle
+                            promptle={promptle}
+                            secondsLeft={secondsLeft}
+                          />
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+                <div className="col-span-2 mt-4">
+                  <PromptleTimer
+                    initialSeconds={givenTime}
+                    secondsLeft={secondsLeft}
+                    setSecondsLeft={setSecondsLeft}
+                  />
+                </div>
+              </div>
+              <Button onClick={handleNextPromptle}>Next Promptle</Button>
+            </>
+          )
         )}
       </div>
     </div>
