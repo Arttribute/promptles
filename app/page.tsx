@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 import GameCard from "@/components/game/game-card";
 
-export default async function Home() {
+export default function Home() {
   const [games, setGames] = useState([]);
 
   const getGames = async () => {
