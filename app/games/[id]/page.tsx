@@ -9,6 +9,7 @@ import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
 import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
+import ScoreDisplay from "@/components/game/score-display";
 
 const givenTime = 10;
 
@@ -23,6 +24,8 @@ export default function Game({ params }: { params: { id: string } }) {
   const [secondsLeft, setSecondsLeft] = useState(givenTime);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const [score, setScore] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -33,7 +36,7 @@ export default function Game({ params }: { params: { id: string } }) {
     if (isCorrect) {
       setIsTimerActive(false);
     }
-  }, [game, loadingPromptles]);
+  }, [game, loadingPromptles, isCorrect]);
 
   async function fetchGame() {
     const res = await axios.get(
@@ -71,6 +74,7 @@ export default function Game({ params }: { params: { id: string } }) {
       setIsTimerActive(true);
     }
   };
+
   async function getPromptleImagesAndUpdate(
     promptleId: string,
     promptId: string,
@@ -124,6 +128,9 @@ export default function Game({ params }: { params: { id: string } }) {
                               handleNextPromptle={handleNextPromptle}
                               isCorrect={isCorrect}
                               setIsCorrect={setIsCorrect}
+                              givenTime={givenTime}
+                              score={score}
+                              setScore={setScore}
                             />
                           )}
                         </div>
@@ -138,6 +145,7 @@ export default function Game({ params }: { params: { id: string } }) {
                       isActive={isTimerActive}
                       setIsActive={setIsTimerActive}
                     />
+                    <ScoreDisplay score={score} />
                   </div>
                 </div>
               )}

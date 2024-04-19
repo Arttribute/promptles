@@ -5,12 +5,16 @@ export default function WordSelector({
   words,
   correctWords,
   isCorrect,
+  wrongAttempts,
   setIsCorrect,
+  setWrongAttempts,
 }: {
   words: string[];
   correctWords: string[];
   isCorrect: boolean;
+  wrongAttempts: number;
   setIsCorrect: (isCorrect: boolean) => void;
+  setWrongAttempts: (wrongAttempts: number) => void;
 }) {
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [wordOptions, setWordOptions] = useState<string[]>(words);
@@ -45,6 +49,7 @@ export default function WordSelector({
       setIsCorrect(true);
     } else {
       setIsCorrect(false);
+      setWrongAttempts(wrongAttempts + 1);
     }
   };
 
