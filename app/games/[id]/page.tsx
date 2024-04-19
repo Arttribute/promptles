@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
 import PromptleTimer from "@/components/game/promptle-timer";
-import { set } from "mongoose";
+import TimeUpCard from "@/components/game/time-up-display";
 
 const givenTime = 10;
 
@@ -114,6 +114,7 @@ export default function Game({ params }: { params: { id: string } }) {
                           <Promptle
                             promptle={promptle}
                             secondsLeft={secondsLeft}
+                            handleNextPromptle={handleNextPromptle}
                           />
                         )}
                       </div>
@@ -128,7 +129,6 @@ export default function Game({ params }: { params: { id: string } }) {
                   />
                 </div>
               </div>
-              <Button onClick={handleNextPromptle}>Next Promptle</Button>
             </>
           )
         )}
