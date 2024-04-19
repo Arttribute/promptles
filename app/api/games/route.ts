@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await dbConnect();
-    const games = await Game.find().sort({ createdAt: -1 });
+    const games = await Game.find().populate("owner").sort({ createdAt: -1 });
     return new NextResponse(JSON.stringify(games), {
       status: 200,
     });
