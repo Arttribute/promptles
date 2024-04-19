@@ -1,17 +1,29 @@
-import Image from "next/image";
+"use client";
 import AccountMenu from "@/components/account/account-menu";
-
+import { useState, useEffect } from "react";
 import GameCard from "@/components/game/game-card";
 
-async function getGames() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/games`, {
-    next: { revalidate: 5 },
-  });
-  const data = await res.json();
-  return data;
-}
-export default async function Home() {
-  const games = await getGames();
+// async function getGames() {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/games`, {
+//     next: { revalidate: 5 },
+//   });
+//   const data = await res.json();
+//   return data;
+// }
+export default function Home() {
+  const [games, setGames] = useState([]);
+
+  const getGames = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/games`, {
+      next: { revalidate: 5 },
+    });
+    const data = await res.json();
+    setGames(data);
+  };
+
+  useEffect(() => {
+    getGames();
+  }, []);
 
   return (
     <div>
