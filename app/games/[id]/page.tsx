@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
 import PromptleTimer from "@/components/game/promptle-timer";
-import TimeUpCard from "@/components/game/time-up-display";
+import StartGameDisplay from "@/components/game/start-game-display";
 
 const givenTime = 10;
 
@@ -18,8 +18,8 @@ export default function Game({ params }: { params: { id: string } }) {
   const [loadingPromptles, setLoadingPromptles] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [promptleUpdated, setPromptleUpdated] = useState(false);
-  const [currentPromptleIndex, setCurrentPromptleIndex] = useState(0);
-  const [promptleCounr, setPromptleCount] = useState(0);
+  const [currentPromptleIndex, setCurrentPromptleIndex] = useState(-1);
+  const [promptleCount, setPromptleCount] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(givenTime);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -64,7 +64,7 @@ export default function Game({ params }: { params: { id: string } }) {
   }
 
   const handleNextPromptle = () => {
-    if (currentPromptleIndex < promptleCounr - 1) {
+    if (currentPromptleIndex < promptleCount - 1) {
       setCurrentPromptleIndex(currentPromptleIndex + 1);
       setSecondsLeft(givenTime);
       setIsCorrect(false);
@@ -111,34 +111,43 @@ export default function Game({ params }: { params: { id: string } }) {
         ) : (
           game && (
             <>
-              <div className="grid grid-cols-12 gap-2">
-                <div className="col-span-10">
-                  {(game as any)?.promptles.map(
-                    (promptle: any, index: number) => (
-                      <div key={promptle._id} className="mt-4">
-                        {index === currentPromptleIndex && (
-                          <Promptle
-                            promptle={promptle}
-                            secondsLeft={secondsLeft}
-                            handleNextPromptle={handleNextPromptle}
-                            isCorrect={isCorrect}
-                            setIsCorrect={setIsCorrect}
-                          />
-                        )}
-                      </div>
-                    )
-                  )}
+              {currentPromptleIndex > -1 && (
+                <div className="grid grid-cols-12 gap-2">
+                  <div className="col-span-10">
+                    {(game as any)?.promptles.map(
+                      (promptle: any, index: number) => (
+                        <div key={promptle._id} className="mt-4">
+                          {index === currentPromptleIndex && (
+                            <Promptle
+                              promptle={promptle}
+                              secondsLeft={secondsLeft}
+                              handleNextPromptle={handleNextPromptle}
+                              isCorrect={isCorrect}
+                              setIsCorrect={setIsCorrect}
+                            />
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                  <div className="col-span-2 mt-4">
+                    <PromptleTimer
+                      initialSeconds={givenTime}
+                      secondsLeft={secondsLeft}
+                      setSecondsLeft={setSecondsLeft}
+                      isActive={isTimerActive}
+                      setIsActive={setIsTimerActive}
+                    />
+                  </div>
                 </div>
-                <div className="col-span-2 mt-4">
-                  <PromptleTimer
-                    initialSeconds={givenTime}
-                    secondsLeft={secondsLeft}
-                    setSecondsLeft={setSecondsLeft}
-                    isActive={isTimerActive}
-                    setIsActive={setIsTimerActive}
-                  />
-                </div>
-              </div>
+              )}
+              {currentPromptleIndex === -1 && (
+                <StartGameDisplay
+                  gameTitle={(game as any)?.game_title}
+                  promptlesCount={promptleCount}
+                  onStartGame={handleNextPromptle}
+                />
+              )}
             </>
           )
         )}
