@@ -1,17 +1,12 @@
 "use client";
-import Image from "next/image";
-import ImagesDisplay from "@/components/game/images-display";
-import WordSelector from "@/components/game/word-selector";
-import AccountMenu from "@/components/account/account-menu";
-
 import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
-
 import axios from "axios";
-import { set } from "mongoose";
+
+import AccountMenu from "@/components/account/account-menu";
+import Promptle from "@/components/game/promptle";
 
 export default function Game({ params }: { params: { id: string } }) {
-  const [isCorrect, setIsCorrect] = useState(false);
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingPromptles, setLoadingPromptles] = useState(true);
@@ -93,17 +88,8 @@ export default function Game({ params }: { params: { id: string } }) {
         ) : (
           game &&
           (game as any)?.promptles.map((promptle: any) => (
-            <div
-              key={promptle._id}
-              className="flex flex-col items-center justify-center h-screen"
-            >
-              <ImagesDisplay images={promptle.images} />
-              <WordSelector
-                words={promptle.promptle_words}
-                correctWords={promptle.solution.split(" ")}
-                isCorrect={isCorrect}
-                setIsCorrect={setIsCorrect}
-              />
+            <div key={promptle._id}>
+              <Promptle promptle={promptle} />
             </div>
           ))
         )}
