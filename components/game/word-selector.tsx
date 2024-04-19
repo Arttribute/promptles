@@ -24,7 +24,8 @@ export default function WordSelector({
     if (selectedWords.length === correctWords.length) {
       checkCorrectness();
     }
-  }, [selectedWords, correctWords]);
+    console.log("worng attempts", wrongAttempts);
+  }, [selectedWords.length, correctWords.length]);
 
   const handleOptionClick = (word: string) => {
     if (selectedWords.length < correctWords.length) {
