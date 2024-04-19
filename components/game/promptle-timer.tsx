@@ -6,12 +6,15 @@ export default function PromptleTime({
   initialSeconds,
   secondsLeft,
   setSecondsLeft,
+  isActive,
+  setIsActive,
 }: {
   initialSeconds: number;
   secondsLeft: number;
   setSecondsLeft: (secondsLeft: number) => void;
+  isActive: boolean;
+  setIsActive: (isActive: boolean) => void;
 }) {
-  const [isActive, setIsActive] = useState(true);
   const [progress, setProgress] = useState(100);
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

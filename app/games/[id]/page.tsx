@@ -21,14 +21,18 @@ export default function Game({ params }: { params: { id: string } }) {
   const [currentPromptleIndex, setCurrentPromptleIndex] = useState(0);
   const [promptleCounr, setPromptleCount] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(givenTime);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(true);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
-
     setAccount(user);
     fetchGame();
     loadPromptles();
+    if (isCorrect) {
+      setIsTimerActive(false);
+    }
   }, [game, loadingPromptles]);
 
   async function fetchGame() {
@@ -63,6 +67,8 @@ export default function Game({ params }: { params: { id: string } }) {
     if (currentPromptleIndex < promptleCounr - 1) {
       setCurrentPromptleIndex(currentPromptleIndex + 1);
       setSecondsLeft(givenTime);
+      setIsCorrect(false);
+      setIsTimerActive(true);
     }
   };
   async function getPromptleImagesAndUpdate(
@@ -115,6 +121,8 @@ export default function Game({ params }: { params: { id: string } }) {
                             promptle={promptle}
                             secondsLeft={secondsLeft}
                             handleNextPromptle={handleNextPromptle}
+                            isCorrect={isCorrect}
+                            setIsCorrect={setIsCorrect}
                           />
                         )}
                       </div>
@@ -126,6 +134,8 @@ export default function Game({ params }: { params: { id: string } }) {
                     initialSeconds={givenTime}
                     secondsLeft={secondsLeft}
                     setSecondsLeft={setSecondsLeft}
+                    isActive={isTimerActive}
+                    setIsActive={setIsTimerActive}
                   />
                 </div>
               </div>

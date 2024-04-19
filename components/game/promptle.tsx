@@ -9,14 +9,16 @@ import SuccessDisplay from "@/components/game//success-display";
 export default function Promptle({
   promptle,
   secondsLeft,
+  isCorrect,
   handleNextPromptle,
+  setIsCorrect,
 }: {
   promptle: any;
   secondsLeft: number;
+  isCorrect: boolean;
   handleNextPromptle: () => void;
+  setIsCorrect: (isCorrect: boolean) => void;
 }) {
-  const [isCorrect, setIsCorrect] = useState(false);
-
   return (
     <div className="flex flex-col items-center justify-cente">
       <ImagesDisplay images={promptle.images} />
