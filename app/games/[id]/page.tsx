@@ -9,6 +9,7 @@ import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
 import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
+import GameEndDisplay from "@/components/game/game-end-display";
 import ScoreDisplay from "@/components/game/score-display";
 
 const givenTime = 10;
@@ -67,7 +68,7 @@ export default function Game({ params }: { params: { id: string } }) {
   }
 
   const handleNextPromptle = () => {
-    if (currentPromptleIndex < promptleCount - 1) {
+    if (currentPromptleIndex < promptleCount) {
       setCurrentPromptleIndex(currentPromptleIndex + 1);
       setSecondsLeft(givenTime);
       setIsCorrect(false);
@@ -138,14 +139,18 @@ export default function Game({ params }: { params: { id: string } }) {
                     )}
                   </div>
                   <div className="col-span-2 mt-4">
-                    <PromptleTimer
-                      initialSeconds={givenTime}
-                      secondsLeft={secondsLeft}
-                      setSecondsLeft={setSecondsLeft}
-                      isActive={isTimerActive}
-                      setIsActive={setIsTimerActive}
-                    />
-                    <ScoreDisplay score={score} />
+                    {currentPromptleIndex !== promptleCount && (
+                      <>
+                        <PromptleTimer
+                          initialSeconds={givenTime}
+                          secondsLeft={secondsLeft}
+                          setSecondsLeft={setSecondsLeft}
+                          isActive={isTimerActive}
+                          setIsActive={setIsTimerActive}
+                        />
+                        <ScoreDisplay score={score} />
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -154,6 +159,12 @@ export default function Game({ params }: { params: { id: string } }) {
                   gameTitle={(game as any)?.game_title}
                   promptlesCount={promptleCount}
                   onStartGame={handleNextPromptle}
+                />
+              )}
+              {currentPromptleIndex === promptleCount && (
+                <GameEndDisplay
+                  gameTitle={(game as any)?.game_title}
+                  score={score}
                 />
               )}
             </>
