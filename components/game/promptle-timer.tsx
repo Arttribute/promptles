@@ -33,13 +33,17 @@ export default function PromptleTime({
     <>
       <div className="flex flex-col items-center">
         <div
-          className={`text-3xl font-semibold mb-3 ${
-            secondsLeft <= 5 ? "text-red-500 animate-ping" : ""
+          className={`text-4xl font-semibold mb-2 ${
+            secondsLeft <= 5 && secondsLeft > 0
+              ? "text-red-500 animate-ping"
+              : secondsLeft === 0
+              ? "text-red-500"
+              : ""
           }`}
         >
           {secondsLeft}
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className="h-2 ml-1" />
       </div>
     </>
   );
