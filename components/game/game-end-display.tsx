@@ -9,10 +9,12 @@ export default function GameEndDisplay({
   gameTitle,
   score,
   onchainGameIndex,
+  isFirstPlay,
 }: {
   gameTitle: string;
   score: number;
   onchainGameIndex: number;
+  isFirstPlay: boolean;
 }) {
   return (
     <div className="w-full">
@@ -20,7 +22,10 @@ export default function GameEndDisplay({
         <p className="text-md font-semibold ">{gameTitle}</p>
         <p className="text-lg ">Your Score</p>
         <p className="text-2xl ">{score}</p>
-        <EnterLeaderboard score={score} onchainGameIndex={onchainGameIndex} />
+        {isFirstPlay && (
+          <EnterLeaderboard score={score} onchainGameIndex={onchainGameIndex} />
+        )}
+
         <Link href="/games">
           <Button variant="outline" className="rounded-lg mt-1">
             Exit Game
