@@ -11,6 +11,9 @@ import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
 import GameEndDisplay from "@/components/game/game-end-display";
 import ScoreDisplay from "@/components/game/score-display";
+
+import { ArbitrumSepolia } from "@/lib/contractAddresses";
+import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
 import {
   CreatedAttestation,
   findAttestation,
@@ -35,6 +38,8 @@ export default function Game({ params }: { params: { id: string } }) {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [score, setScore] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [onchainGameIndex, setOnchainGameIndex] = useState(0);
+  const [gameLeaderboard, setGameLeaderboard] = useState([]);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -57,6 +62,30 @@ export default function Game({ params }: { params: { id: string } }) {
     const data = res.data;
     setGame(data);
     setPromptleCount(data.promptles.length);
+
+    const provider = new ethers.JsonRpcProvider(
+      "https://arbitrum-sepolia.infura.io/v3/2MFflEDUYSnkTPYw1RuKEHbhFIj"
+    );
+    const leaderboardsContract = new ethers.Contract(
+      ArbitrumSepolia.PromptleLeaderboards,
+      LeaderboardsAbi,
+      provider
+    );
+    console.log("gameId", data.game._id);
+    const gameIndexOnchain = await leaderboardsContract.getGameIndex(
+      data.game._id
+    );
+    const gameIndexOnchainToNumber = Number(gameIndexOnchain);
+    console.log("gameIndexOnchain", gameIndexOnchainToNumber);
+    console.log("gameIndexOnchain type", typeof gameIndexOnchainToNumber);
+    setOnchainGameIndex(gameIndexOnchainToNumber);
+    const gameLeaderboardOnchain =
+      await leaderboardsContract.getGameLeaderboard(
+        gameIndexOnchainToNumber - 1
+      ); // -1 since actual index starts from 0 in the contract but 0 reserved for non-existent games
+    console.log("gameLeaderboardOnchain", gameLeaderboardOnchain);
+    setGameLeaderboard(gameLeaderboardOnchain);
+
     setLoading(false);
   }
 
@@ -201,6 +230,7 @@ export default function Game({ params }: { params: { id: string } }) {
                 <GameEndDisplay
                   gameTitle={(game as any)?.game_title}
                   score={score}
+                  onchainGameIndex={onchainGameIndex}
                   onEndGame={attestPlayed}
                 />
               )}

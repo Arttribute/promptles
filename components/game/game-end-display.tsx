@@ -2,14 +2,17 @@ import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import EnterLeaderboard from "@/components/game/enter-leaderboard";
 
 export default function GameEndDisplay({
   gameTitle,
   score,
+  onchainGameIndex,
   onEndGame,
 }: {
   gameTitle: string;
   score: number;
+  onchainGameIndex: number;
   onEndGame: () => void;
 }) {
   return (
@@ -27,6 +30,7 @@ export default function GameEndDisplay({
           Exit Game
           <ChevronRight size={20} className="ml-0.5 w-4 h-4" />
         </Button>
+        <EnterLeaderboard score={score} onchainGameIndex={onchainGameIndex} />
       </div>
     </div>
   );
