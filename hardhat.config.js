@@ -13,6 +13,7 @@ module.exports = {
       chainId: 421614,
       url: "https://sepolia-rollup.arbitrum.io/rpc",
       accounts: [privateKey],
+      gasPrice: 5189860000,
     },
   },
   solidity: "0.8.24",

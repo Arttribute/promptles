@@ -3,6 +3,7 @@ import { useState, useEffect, use } from "react";
 import PromptleField from "./promptle-field";
 
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import AddPromptField from "./add-prompt-field";
 import axios from "axios";
 import { User } from "@/models/User";
@@ -22,6 +23,7 @@ export default function PromptleForm() {
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [numberOfImages, setNumberOfImages] = useState(1);
   const [account, setAccount] = useState<User | null>(null);
+  const [timeGiven, setTimeGiven] = useState(15);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -49,6 +51,7 @@ export default function PromptleForm() {
       const gameData = {
         game_title: gameTitle,
         description: description,
+        time_given: timeGiven,
         owner: account?._id,
       };
       const res = await axios.post(
@@ -105,6 +108,7 @@ export default function PromptleForm() {
           }
         );
         const PromptResponse = res.data.newPrompt;
+        console.log("Prompt Response", PromptResponse);
       }
     } catch (error) {
       console.error("Error in API call:", error);
@@ -114,6 +118,14 @@ export default function PromptleForm() {
   return (
     <>
       <div className="p-0.5 m-2 rounded-lg lg:w-[50%]">
+        <div className="mt-2">
+          <p className="text-sm">Game Title</p>
+          <Input
+            placeholder="Game Title"
+            onChange={(e) => setGameTitle(e.target.value)}
+          />
+        </div>
+
         <div className="font-semibold">Create your prompt puzzle game</div>
         <div className="font-light text-sm mb-2">
           Write at most a 6-word prompt and a 12-word decoy for each puzzle
@@ -139,6 +151,17 @@ export default function PromptleForm() {
           promptFieldsCount={promptFieldsCount}
           setPromptFieldCount={setPromptFieldCount}
         />
+
+        <div className="mt-2">
+          <p className="text-sm">Time Given</p>
+          <Input
+            placeholder="Time Given"
+            type="number"
+            onChange={(e) => setTimeGiven(Number(e.target.value))}
+            value={timeGiven}
+          />
+        </div>
+
         <div className="mt-2">
           <Button className="mt-2 w-full" onClick={onSubmit}>
             Create

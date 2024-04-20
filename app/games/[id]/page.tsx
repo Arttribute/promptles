@@ -17,7 +17,7 @@ import Web3Modal from "web3modal";
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
 
-const givenTime = 10;
+const givenTime = 15;
 
 export default function Game({ params }: { params: { id: string } }) {
   const [game, setGame] = useState(null);
@@ -73,12 +73,12 @@ export default function Game({ params }: { params: { id: string } }) {
     console.log("gameIndexOnchain", gameIndexOnchainToNumber);
     console.log("gameIndexOnchain type", typeof gameIndexOnchainToNumber);
     setOnchainGameIndex(gameIndexOnchainToNumber);
-    const gameLeaderboardOnchain =
-      await leaderboardsContract.getGameLeaderboard(
-        gameIndexOnchainToNumber - 1
-      ); // -1 since actual index starts from 0 in the contract but 0 reserved for non-existent games
-    console.log("gameLeaderboardOnchain", gameLeaderboardOnchain);
-    setGameLeaderboard(gameLeaderboardOnchain);
+    // const gameLeaderboardOnchain =
+    //   await leaderboardsContract.getGameLeaderboard(
+    //     gameIndexOnchainToNumber - 1
+    //   ); // -1 since actual index starts from 0 in the contract but 0 reserved for non-existent games
+    // console.log("gameLeaderboardOnchain", gameLeaderboardOnchain);
+    // setGameLeaderboard(gameLeaderboardOnchain);
 
     setLoading(false);
   }
@@ -101,7 +101,7 @@ export default function Game({ params }: { params: { id: string } }) {
   const handleNextPromptle = () => {
     if (currentPromptleIndex < promptleCount) {
       setCurrentPromptleIndex(currentPromptleIndex + 1);
-      setSecondsLeft(givenTime);
+      setSecondsLeft((game as any)?.game.time_given);
       setIsCorrect(false);
       setIsTimerActive(true);
     }
@@ -160,7 +160,7 @@ export default function Game({ params }: { params: { id: string } }) {
                               handleNextPromptle={handleNextPromptle}
                               isCorrect={isCorrect}
                               setIsCorrect={setIsCorrect}
-                              givenTime={givenTime}
+                              givenTime={(game as any)?.game.time_given}
                               score={score}
                               setScore={setScore}
                             />
@@ -187,7 +187,7 @@ export default function Game({ params }: { params: { id: string } }) {
               )}
               {currentPromptleIndex === -1 && (
                 <StartGameDisplay
-                  gameTitle={(game as any)?.game_title}
+                  gameTitle={(game as any)?.game.game_title}
                   promptlesCount={promptleCount}
                   onStartGame={handleNextPromptle}
                 />
