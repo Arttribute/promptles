@@ -2,11 +2,15 @@
 import { useState, useEffect, use } from "react";
 import PromptleField from "./promptle-field";
 
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import AddPromptField from "./add-prompt-field";
 import axios from "axios";
 import { User } from "@/models/User";
+
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import { ArbitrumSepolia } from "@/lib/contractAddresses";
+import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
 
 export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
@@ -29,10 +33,19 @@ export default function PromptleForm() {
     console.log("decoys", decoys);
   }, [prompts, decoys]);
 
-  async function onSubmit() {
-    setLoading(true);
+  async function createNewGame() {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+
+    const provider = new ethers.BrowserProvider(connection);
+    const signer = await provider.getSigner();
+    const leaderboardsContract = new ethers.Contract(
+      ArbitrumSepolia.PromptleLeaderboards,
+      LeaderboardsAbi,
+      signer
+    );
+
     try {
-      //create game
       const gameData = {
         game_title: gameTitle,
         description: description,
@@ -42,7 +55,21 @@ export default function PromptleForm() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/games`,
         { gameData }
       );
-      const createdGameData = res.data;
+      console.log("res", res.data);
+      const gameOffChainId = res.data._id;
+      const tx = await leaderboardsContract.createGame(gameOffChainId);
+      await tx.wait();
+      return res.data;
+    } catch (error) {
+      console.error("Error in creating game", error);
+    }
+  }
+
+  async function onSubmit() {
+    setLoading(true);
+    try {
+      //create game
+      const createdGameData = await createNewGame();
 
       for (let i = 0; i < prompts.length; i++) {
         //randomly shuffle decoy and add the solution
