@@ -34,6 +34,9 @@ contract PromptlesLeaderboards {
 
     function getGameLeaderboard(uint gameId) public view returns (Player[] memory) {
         require(gameId < games.length, "Game does not exist.");
+        if (games[gameId].leaderboard.length == 0) {
+            return new Player[](0);
+        }
         Player[] memory leaderboard = games[gameId].leaderboard;
         quickSort(leaderboard, 0, int(leaderboard.length - 1));
         return leaderboard;
