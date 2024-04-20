@@ -14,7 +14,6 @@ contract PromptlesLeaderboards {
     }
 
     Game[] public games;
-    mapping(bytes32 => uint) private gameIndexMap;  // Map to store the hash of gameData to its index
 
     event GameCreated(uint gameId, string gameData, address creator);
     event ScoreAdded(uint gameId, address player, uint score);
@@ -24,8 +23,6 @@ contract PromptlesLeaderboards {
         newGame.gameData = gameData;
         newGame.creator = msg.sender;
         uint gameId = games.length - 1;
-        bytes32 gameDataHash = keccak256(abi.encodePacked(gameData));
-        gameIndexMap[gameDataHash] = gameId;  // Update the mapping with the new game's index
         emit GameCreated(gameId, gameData, msg.sender);
     }
 
@@ -73,11 +70,11 @@ contract PromptlesLeaderboards {
     }
 
     function getGameIndex(string memory gameData) public view returns (uint) {
-        bytes32 gameDataHash = keccak256(abi.encodePacked(gameData));
-        uint index = gameIndexMap[gameDataHash];
-        if (index < games.length && keccak256(abi.encodePacked(games[index].gameData)) == gameDataHash) {
-            return index+1; // +1 since index 0 is reserved for non-existent games.
+        for (uint i = 0; i < games.length; i++) {
+            if (keccak256(abi.encodePacked(games[i].gameData)) == keccak256(abi.encodePacked(gameData))) {
+                return i+1; // 0 is reserved for non-existent games
+            }
         }
-        return  0; 
+        return 0;
     }
 }
