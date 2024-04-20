@@ -59,5 +59,10 @@ describe("PromptlesLeaderboards Contract", function () {
         "Game does not exist."
       );
     });
+    it("should find the correct game index using game data", async function () {
+      await leaderboards.createGame("Indexed Game");
+      const index = await leaderboards.getGameIndex("Indexed Game");
+      expect(index).to.equal(0 + 1); // Assumes it's the first game created
+    });
   });
 });

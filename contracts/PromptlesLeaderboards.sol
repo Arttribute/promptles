@@ -8,22 +8,25 @@ contract PromptlesLeaderboards {
     }
 
     struct Game {
-        string name;
+        string gameData;
         address creator;
         Player[] leaderboard;
     }
 
     Game[] public games;
+    mapping(bytes32 => uint) private gameIndexMap;  // Map to store the hash of gameData to its index
 
-    event GameCreated(uint gameId, string name, address creator);
+    event GameCreated(uint gameId, string gameData, address creator);
     event ScoreAdded(uint gameId, address player, uint score);
     
-    function createGame(string memory name) public {
+    function createGame(string memory gameData) public {
         Game storage newGame = games.push();
-        newGame.name = name;
+        newGame.gameData = gameData;
         newGame.creator = msg.sender;
         uint gameId = games.length - 1;
-        emit GameCreated(gameId, name, msg.sender);
+        bytes32 gameDataHash = keccak256(abi.encodePacked(gameData));
+        gameIndexMap[gameDataHash] = gameId;  // Update the mapping with the new game's index
+        emit GameCreated(gameId, gameData, msg.sender);
     }
 
     function addScore(uint gameId, uint score) public {
@@ -34,13 +37,11 @@ contract PromptlesLeaderboards {
 
     function getGameLeaderboard(uint gameId) public view returns (Player[] memory) {
         require(gameId < games.length, "Game does not exist.");
-        // Sort the leaderboard in descending order
         Player[] memory leaderboard = games[gameId].leaderboard;
         quickSort(leaderboard, 0, int(leaderboard.length - 1));
         return leaderboard;
     }
 
-    //Quick sort algorithm
     function quickSort(Player[] memory arr, int left, int right) internal pure {
         int i = left;
         int j = right;
@@ -61,7 +62,6 @@ contract PromptlesLeaderboards {
             quickSort(arr, i, right);
     }
 
-    // Function to get the score of a player in a specific game
     function getPlayerScore(uint gameId, address player) public view returns (uint) {
         require(gameId < games.length, "Game does not exist.");
         for (uint i = 0; i < games[gameId].leaderboard.length; i++) {
@@ -70,5 +70,14 @@ contract PromptlesLeaderboards {
             }
         }
         return 0;
+    }
+
+    function getGameIndex(string memory gameData) public view returns (uint) {
+        bytes32 gameDataHash = keccak256(abi.encodePacked(gameData));
+        uint index = gameIndexMap[gameDataHash];
+        if (index < games.length && keccak256(abi.encodePacked(games[index].gameData)) == gameDataHash) {
+            return index+1; // +1 since index 0 is reserved for non-existent games.
+        }
+        return  0; 
     }
 }
