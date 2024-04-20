@@ -11,11 +11,19 @@ import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
 import GameEndDisplay from "@/components/game/game-end-display";
 import ScoreDisplay from "@/components/game/score-display";
+import {
+  CreatedAttestation,
+  findAttestation,
+  makeAttestation,
+  queryAttestations,
+} from "@/lib/ethsign";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 
 const givenTime = 10;
 
 export default function Game({ params }: { params: { id: string } }) {
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [loadingPromptles, setLoadingPromptles] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
@@ -50,6 +58,34 @@ export default function Game({ params }: { params: { id: string } }) {
     setGame(data);
     setPromptleCount(data.promptles.length);
     setLoading(false);
+  }
+
+  async function attestPlayed() {
+    if (!account || !game) return;
+    // search for existing attestation
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+
+    const provider = new ethers.BrowserProvider(connection);
+    const signer = await provider.getSigner();
+
+    const attestations = await queryAttestations(
+      signer.address,
+      account.web3Address
+    );
+
+    const att = findAttestation(game.game._id, attestations.attestations);
+
+    // if not found, create attestation
+    if (att) {
+      console.log("Attestation found", att);
+    } else {
+      console.log("Attestation not found");
+      const newAtt: CreatedAttestation = await makeAttestation(
+        account.web3Address,
+        game.game._id
+      );
+    }
   }
 
   async function loadPromptles() {
@@ -165,6 +201,7 @@ export default function Game({ params }: { params: { id: string } }) {
                 <GameEndDisplay
                   gameTitle={(game as any)?.game_title}
                   score={score}
+                  onEndGame={attestPlayed}
                 />
               )}
             </>

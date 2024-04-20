@@ -6,9 +6,11 @@ import { ChevronRight } from "lucide-react";
 export default function GameEndDisplay({
   gameTitle,
   score,
+  onEndGame,
 }: {
   gameTitle: string;
   score: number;
+  onEndGame: () => void;
 }) {
   return (
     <div className="w-full">
@@ -17,7 +19,11 @@ export default function GameEndDisplay({
         <p className="text-lg ">Your Score</p>
         <p className="text-2xl ">{score}</p>
 
-        <Button variant="outline" className="rounded-lg mt-1">
+        <Button
+          variant="outline"
+          className="rounded-lg mt-1"
+          onClick={onEndGame}
+        >
           Exit Game
           <ChevronRight size={20} className="ml-0.5 w-4 h-4" />
         </Button>
