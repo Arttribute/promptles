@@ -3,7 +3,7 @@ import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
 
-import { Button } from "@/components/ui/button";
+import AppBar from "@/components/layout/appbar";
 
 import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
@@ -23,7 +23,7 @@ import {
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 
-const givenTime = 10;
+const givenTime = 15;
 
 export default function Game({ params }: { params: { id: string } }) {
   const [game, setGame] = useState<any>(null);
@@ -137,7 +137,7 @@ export default function Game({ params }: { params: { id: string } }) {
   const handleNextPromptle = () => {
     if (currentPromptleIndex < promptleCount) {
       setCurrentPromptleIndex(currentPromptleIndex + 1);
-      setSecondsLeft(givenTime);
+      setSecondsLeft((game as any)?.game.time_given);
       setIsCorrect(false);
       setIsTimerActive(true);
     }
@@ -176,7 +176,7 @@ export default function Game({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <AccountMenu />
+      <AppBar />
       <div className="flex flex-col items-center justify-center h-screen">
         {loading ? (
           <div>Loading...</div>
@@ -196,7 +196,7 @@ export default function Game({ params }: { params: { id: string } }) {
                               handleNextPromptle={handleNextPromptle}
                               isCorrect={isCorrect}
                               setIsCorrect={setIsCorrect}
-                              givenTime={givenTime}
+                              givenTime={(game as any)?.game.time_given}
                               score={score}
                               setScore={setScore}
                             />
@@ -223,7 +223,7 @@ export default function Game({ params }: { params: { id: string } }) {
               )}
               {currentPromptleIndex === -1 && (
                 <StartGameDisplay
-                  gameTitle={(game as any)?.game_title}
+                  gameTitle={(game as any)?.game.game_title}
                   promptlesCount={promptleCount}
                   onStartGame={handleNextPromptle}
                   handleAttest={handleAttest}

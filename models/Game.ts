@@ -6,6 +6,7 @@ const { ObjectId } = mongoose.Schema.Types;
 export interface Game {
   game_title: string;
   description: string;
+  time_given: number;
   images: string[];
   owner: object;
   featured: boolean;
@@ -19,6 +20,10 @@ const GameSchema = new mongoose.Schema<Game>(
     },
     description: {
       type: String,
+      required: true,
+    },
+    time_given: {
+      type: Number,
       required: true,
     },
     images: {
