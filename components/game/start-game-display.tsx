@@ -7,10 +7,12 @@ export default function StartGameDisplay({
   gameTitle,
   promptlesCount,
   onStartGame,
+  handleAttest,
 }: {
   gameTitle: string;
   promptlesCount: number;
   onStartGame: () => void;
+  handleAttest: () => void;
 }) {
   return (
     <div className="w-full">
@@ -22,7 +24,10 @@ export default function StartGameDisplay({
         <Button
           variant="outline"
           className="rounded-lg mt-1"
-          onClick={onStartGame}
+          onClick={async () => {
+            await handleAttest();
+            onStartGame();
+          }}
         >
           Start Game
           <ChevronRight size={20} className="ml-0.5 w-4 h-4" />

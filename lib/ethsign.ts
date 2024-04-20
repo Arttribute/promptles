@@ -9,6 +9,11 @@ export interface CreatedAttestation {
   indexingValue: string;
 }
 
+type ParsedAttestation = {
+  web3Address: string;
+  game_id: string;
+};
+
 export const client = new SignProtocolClient(SpMode.OnChain, {
   chain: EvmChains.arbitrumSepolia,
 });
@@ -135,7 +140,10 @@ export function findAttestation(game_id: string, attestations: any[]) {
 
     // Return the correct attestation and its parsed data.
     if (parsedData?.game_id === game_id) {
-      return { parsedData, attestation: att };
+      return { parsedData, attestation: att } as {
+        parsedData: ParsedAttestation;
+        attestation: any;
+      };
     }
   }
 
