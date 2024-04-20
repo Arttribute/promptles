@@ -27,7 +27,7 @@ export default function AccountMenu() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-10 p-2 bg-white">
+    <>
       <Menubar className="rounded-none border-none px-2 lg:px-4">
         {account ? (
           <>
@@ -93,6 +93,6 @@ export default function AccountMenu() {
           />
         )}
       </Menubar>
-    </div>
+    </>
   );
 }

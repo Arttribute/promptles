@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import AccountMenu from "@/components/account/account-menu";
+import AppBar from "@/components/layout/appbar";
 import { useState, useEffect } from "react";
 
 import GameCard from "@/components/game/game-card";
@@ -22,8 +22,8 @@ export default function Games() {
 
   return (
     <div>
-      <AccountMenu />
-      <div className="flex flex-col items-center justify-center h-screen w-full">
+      <AppBar />
+      <div className="flex flex-col items-center justify-center w-full mt-20">
         <div className="grid grid-cols-12 gap-2">
           {games &&
             games.map((game: any) => (

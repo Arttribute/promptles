@@ -3,7 +3,7 @@ import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
 
-import { Button } from "@/components/ui/button";
+import AppBar from "@/components/layout/appbar";
 
 import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
@@ -140,7 +140,7 @@ export default function Game({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <AccountMenu />
+      <AppBar />
       <div className="flex flex-col items-center justify-center h-screen">
         {loading ? (
           <div>Loading...</div>

@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 
 import GameCard from "@/components/game/game-card";
 
+import AppBar from "@/components/layout/appbar";
+
 export default function Home() {
   const [games, setGames] = useState([]);
 
@@ -22,8 +24,8 @@ export default function Home() {
 
   return (
     <div>
-      <AccountMenu />
-      <div className="flex flex-col items-center justify-center h-screen w-full">
+      <AppBar />
+      <div className="flex flex-col items-center justify-center mt-20 w-full">
         <div className="grid grid-cols-12 gap-2">
           {games &&
             games.map((game: any) => (
