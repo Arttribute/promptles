@@ -1,3 +1,3 @@
 export const ArbitrumSepolia = {
-  PromptleLeaderboards: "0x17A7428596776A82b9E2D11fd7c523e8e1BA92B1",
+  PromptleLeaderboards: "0xA9639c9bA80dcF06e858C6495a72e4661C059Fe3",
 };
