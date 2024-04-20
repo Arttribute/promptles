@@ -11,7 +11,7 @@ export const LeaderboardsAbi = [
       {
         indexed: false,
         internalType: "string",
-        name: "name",
+        name: "gameData",
         type: "string",
       },
       {
@@ -71,7 +71,7 @@ export const LeaderboardsAbi = [
     inputs: [
       {
         internalType: "string",
-        name: "name",
+        name: "gameData",
         type: "string",
       },
     ],
@@ -92,13 +92,32 @@ export const LeaderboardsAbi = [
     outputs: [
       {
         internalType: "string",
-        name: "name",
+        name: "gameData",
         type: "string",
       },
       {
         internalType: "address",
         name: "creator",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "gameData",
+        type: "string",
+      },
+    ],
+    name: "getGameIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
