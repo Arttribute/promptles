@@ -37,17 +37,15 @@ export default function EnterLeaderboard({
       console.log("error", e);
     }
   };
+
   return (
     <div className="w-full">
       <div className="p-2 flex flex-col items-center justify-center">
-        <Button
-          variant="outline"
-          className="rounded-lg mt-1"
-          onClick={enterOnchainLeaderboard}
-        >
-          Enter game leaderboard!
-          <ChevronRight size={20} className="ml-0.5 w-4 h-4" />
-        </Button>
+        {score > 0 && (
+          <Button className="rounded-lg mt-1" onClick={enterOnchainLeaderboard}>
+            Enter game leaderboard!
+          </Button>
+        )}
       </div>
     </div>
   );
