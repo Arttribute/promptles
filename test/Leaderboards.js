@@ -62,7 +62,7 @@ describe("PromptlesLeaderboards Contract", function () {
     it("should find the correct game index using game data", async function () {
       await leaderboards.createGame("Indexed Game");
       const index = await leaderboards.getGameIndex("Indexed Game");
-      expect(index).to.equal(0 + 1); // Assumes it's the first game created
+      expect(index).to.equal(0 + 1); // Assumes it's the first game created. +1 since index 0 is reserved for non-existent games.
     });
   });
 });
