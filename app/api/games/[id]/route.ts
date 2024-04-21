@@ -8,10 +8,9 @@ import { type NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    const searchParams = request.nextUrl.searchParams;
+    const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const game = await Game.findById(id).populate("owner");
-    console.log("game", game);
     const promptles = await Promptle.find({ game_id: id }).populate("owner");
     const scores = await Score.find({ game_id: id }).populate("player");
     return new NextResponse(JSON.stringify({ game, promptles, scores }), {
