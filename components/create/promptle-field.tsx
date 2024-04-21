@@ -70,7 +70,7 @@ export default function PromptleField({
             />
             <Input
               type="text"
-              placeholder={`decoy words: upto 10 words`}
+              placeholder={`decoy words: upto 8 words`}
               onChange={(event) => {
                 setDecoy(event.target.value);
                 decoys[index] = event.target.value;

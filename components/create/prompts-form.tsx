@@ -148,7 +148,7 @@ export default function PromptleForm() {
 
         <div className="font-semibold">Create your prompt puzzle game</div>
         <div className="font-light text-sm mb-2">
-          Write at most a 6-word prompt and a 12-word decoy for each puzzle
+          Write at most a 6-word prompt and a 8-word decoy for each puzzle
         </div>
 
         {promptFieldsCount > 0 && (
