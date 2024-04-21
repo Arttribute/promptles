@@ -227,6 +227,7 @@ export default function Game({ params }: { params: { id: string } }) {
                   gameTitle={(game as any)?.game.game_title}
                   promptlesCount={promptleCount}
                   onStartGame={handleNextPromptle}
+                  timeGiven={(game as any)?.game.time_given}
                   handleAttest={handleAttest}
                 />
               )}
@@ -235,6 +236,9 @@ export default function Game({ params }: { params: { id: string } }) {
                   gameTitle={(game as any)?.game_title}
                   score={score}
                   onchainGameIndex={onchainGameIndex}
+                  offchainGameId={(game as any)?.game._id}
+                  playerId={account?._id}
+                  gamescores={(game as any)?.scores}
                   isFirstPlay={isFirstPlay}
                 />
               )}

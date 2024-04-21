@@ -4,6 +4,7 @@ import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import Link from "next/link";
 import AccountMenu from "../account/account-menu";
 import { Puzzle } from "lucide-react";
+import { Logo } from "@/components/layout/logo";
 
 export default function AppBar() {
   return (
@@ -12,8 +13,7 @@ export default function AppBar() {
         <MenubarMenu>
           <div className=" lg:hidden"></div>
           <MenubarTrigger>
-            <Puzzle className="w-5 h-5 mr-1 text-fuchsia-600 text-xs" />
-            <div className="text-base font-bold">Promptles</div>
+            <Logo text="Promptles" />
           </MenubarTrigger>
         </MenubarMenu>
         <div className="grow" />
