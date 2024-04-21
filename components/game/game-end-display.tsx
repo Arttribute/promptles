@@ -16,6 +16,7 @@ export default function GameEndDisplay({
   onchainGameIndex,
   offchainGameId,
   playerId,
+  isFirstPlay,
 }: {
   gameTitle: string;
   score: number;
@@ -23,6 +24,7 @@ export default function GameEndDisplay({
   onchainGameIndex: number;
   offchainGameId: string;
   playerId: string;
+  isFirstPlay: boolean;
 }) {
   return (
     <>
@@ -50,12 +52,14 @@ export default function GameEndDisplay({
 
               <p className="text-3xl font-bold ">{score}</p>
               <p className="text-sm font-semibold">Your Score</p>
-              <EnterLeaderboard
-                score={score}
-                onchainGameIndex={onchainGameIndex}
-                offchainGameId={offchainGameId}
-                playerId={playerId}
-              />
+              {isFirstPlay && (
+                <EnterLeaderboard
+                  score={score}
+                  onchainGameIndex={onchainGameIndex}
+                  offchainGameId={offchainGameId}
+                  playerId={playerId}
+                />
+              )}
               <div className="mt-12">
                 <Link href="/games">
                   <Button variant="outline" className="rounded-lg mt-1">

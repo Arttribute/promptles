@@ -12,15 +12,21 @@ import StartGameDisplay from "@/components/game/start-game-display";
 import GameEndDisplay from "@/components/game/game-end-display";
 import ScoreDisplay from "@/components/game/score-display";
 
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
+import {
+  CreatedAttestation,
+  findAttestation,
+  makeAttestation,
+  queryAttestations,
+} from "@/lib/ethsign";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 
 const givenTime = 15;
 
 export default function Game({ params }: { params: { id: string } }) {
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [loadingPromptles, setLoadingPromptles] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
@@ -34,6 +40,7 @@ export default function Game({ params }: { params: { id: string } }) {
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [onchainGameIndex, setOnchainGameIndex] = useState(0);
   const [gameLeaderboard, setGameLeaderboard] = useState([]);
+  const [isFirstPlay, setIsFirstPlay] = useState(false);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -81,6 +88,36 @@ export default function Game({ params }: { params: { id: string } }) {
     // setGameLeaderboard(gameLeaderboardOnchain);
 
     setLoading(false);
+  }
+
+  async function handleAttest() {
+    if (!account || !game) return;
+    // search for existing attestation
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+
+    const provider = new ethers.BrowserProvider(connection);
+    const signer = await provider.getSigner();
+
+    const attestations = await queryAttestations(
+      signer.address,
+      account.web3Address
+    );
+
+    const att = findAttestation(game.game._id, attestations.attestations ?? []);
+
+    console.log("att", att);
+
+    // if not found, create attestation
+    if (!att) {
+      const newAtt: CreatedAttestation = await makeAttestation(
+        account.web3Address,
+        game.game._id
+      );
+      setIsFirstPlay(true);
+    } else {
+      setIsFirstPlay(false);
+    }
   }
 
   async function loadPromptles() {
@@ -191,6 +228,7 @@ export default function Game({ params }: { params: { id: string } }) {
                   promptlesCount={promptleCount}
                   onStartGame={handleNextPromptle}
                   timeGiven={(game as any)?.game.time_given}
+                  handleAttest={handleAttest}
                 />
               )}
               {currentPromptleIndex === promptleCount && (
@@ -201,6 +239,7 @@ export default function Game({ params }: { params: { id: string } }) {
                   offchainGameId={(game as any)?.game._id}
                   playerId={account?._id}
                   gamescores={(game as any)?.scores}
+                  isFirstPlay={isFirstPlay}
                 />
               )}
             </>
