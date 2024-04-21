@@ -47,7 +47,6 @@ export default function Game({ params }: { params: { id: string } }) {
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
     fetchGame();
-    loadPromptles();
   }, [loadingPromptles]);
 
   useEffect(() => {
@@ -55,6 +54,10 @@ export default function Game({ params }: { params: { id: string } }) {
       setIsTimerActive(false);
     }
   }, [isCorrect]);
+
+  useEffect(() => {
+    loadPromptles();
+  }, [game]);
 
   async function fetchGame() {
     const res = await axios.get(
@@ -128,7 +131,8 @@ export default function Game({ params }: { params: { id: string } }) {
     const gamePromptles = (game as any)?.promptles;
     for (let i = 0; i < gamePromptles.length; i++) {
       const promptle = gamePromptles[i];
-      if (promptle.status === "completed") continue;
+      console.log("loading promptles! promptle", promptle);
+      if (promptle.images.length === "completed") continue;
       await getPromptleImagesAndUpdate(
         promptle._id,
         promptle.prompt_id,
