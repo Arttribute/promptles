@@ -41,7 +41,7 @@ export default function Home() {
 
               <Link href="/create">
                 <Button variant="outline" className="ml-2 px-8">
-                  Create Ptomptles
+                  Create Promptles
                 </Button>
               </Link>
             </div>
