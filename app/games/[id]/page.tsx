@@ -115,8 +115,9 @@ export default function Game({ params }: { params: { id: string } }) {
         game.game._id
       );
       setIsFirstPlay(true);
+    } else {
+      setIsFirstPlay(false);
     }
-    setIsFirstPlay(false);
   }
 
   async function loadPromptles() {
