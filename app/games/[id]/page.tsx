@@ -48,10 +48,13 @@ export default function Game({ params }: { params: { id: string } }) {
     setAccount(user);
     fetchGame();
     loadPromptles();
+  }, [loadingPromptles]);
+
+  useEffect(() => {
     if (isCorrect) {
       setIsTimerActive(false);
     }
-  }, [game, loadingPromptles, isCorrect]);
+  }, [isCorrect]);
 
   async function fetchGame() {
     const res = await axios.get(
