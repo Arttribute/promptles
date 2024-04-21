@@ -36,16 +36,16 @@ export default function PromptleForm() {
   }, [prompts, decoys]);
 
   async function createNewGame() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
+    // const web3Modal = new Web3Modal();
+    // const connection = await web3Modal.connect();
 
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-    const leaderboardsContract = new ethers.Contract(
-      ArbitrumSepolia.PromptleLeaderboards,
-      LeaderboardsAbi,
-      signer
-    );
+    // const provider = new ethers.BrowserProvider(connection);
+    // const signer = await provider.getSigner();
+    // const leaderboardsContract = new ethers.Contract(
+    //   ArbitrumSepolia.PromptleLeaderboards,
+    //   LeaderboardsAbi,
+    //   signer
+    // );
 
     try {
       const gameData = {
@@ -60,8 +60,8 @@ export default function PromptleForm() {
       );
       console.log("res", res.data);
       const gameOffChainId = res.data._id;
-      const tx = await leaderboardsContract.createGame(gameOffChainId);
-      await tx.wait();
+      // const tx = await leaderboardsContract.createGame(gameOffChainId);
+      // await tx.wait();
       return res.data;
     } catch (error) {
       console.error("Error in creating game", error);
