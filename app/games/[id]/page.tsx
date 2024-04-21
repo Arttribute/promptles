@@ -178,7 +178,7 @@ export default function Game({ params }: { params: { id: string } }) {
   return (
     <div>
       <AppBar />
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center mt-6 h-screen">
         {loading ? (
           <div>Loading...</div>
         ) : (
