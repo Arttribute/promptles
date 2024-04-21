@@ -1,4 +1,7 @@
+"use client";
 import * as React from "react";
+
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -7,15 +10,24 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
+import axios from "axios";
 
 export default function EnterLeaderboard({
   score,
   onchainGameIndex,
+  offchainGameId,
+  playerId,
 }: {
   score: number;
   onchainGameIndex: number;
+  offchainGameId: string;
+  playerId: string;
 }) {
+  const [loading, setLoading] = useState(false);
+  const [scoreAdded, setScoreAdded] = useState(false);
+
   const enterOnchainLeaderboard = async () => {
+    setLoading(true);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
 
@@ -28,11 +40,22 @@ export default function EnterLeaderboard({
     );
 
     try {
+      const scoreData = {
+        game_id: offchainGameId,
+        player: playerId,
+        score_value: score,
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/scores`,
+        { scoreData }
+      );
       const tx = await leaderboardsContract.addScore(
         onchainGameIndex - 1,
         score
       );
-      await tx.wait();
+      //await tx.wait();
+      setLoading(false);
+      setScoreAdded(true);
     } catch (e) {
       console.log("error", e);
     }
@@ -43,7 +66,11 @@ export default function EnterLeaderboard({
       <div className="p-2 flex flex-col items-center justify-center">
         {score > 0 && (
           <Button className="rounded-lg mt-1" onClick={enterOnchainLeaderboard}>
-            Enter game leaderboard!
+            {scoreAdded
+              ? "Added to Leaderboard"
+              : loading
+              ? "Adding score..."
+              : "Enter Leaderboard"}
           </Button>
         )}
       </div>

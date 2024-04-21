@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function WordSelector({
   words,
@@ -58,9 +59,10 @@ export default function WordSelector({
     <>
       <div className="flex">
         {selectedWords.map((word, index) => (
-          <div
+          <Button
+            variant="ghost"
             key={index}
-            className={` m-1 rounded-md border bg-yellow-50 border ${
+            className={` m-1 rounded-md border bg-yellow-50 border px-0.5 py-0.5 ${
               selectedWords.length === correctWords.length
                 ? isCorrect
                   ? "border-green-500"
@@ -69,10 +71,10 @@ export default function WordSelector({
             } `}
             onClick={() => handleSelectedWordClick(word)}
           >
-            <div className="px-4 bg-white border  m-0.5 p-0.5 rounded-sm">
+            <div className="px-4 bg-white border  py-1.5 rounded-sm">
               <p className="font-medium ">{word}</p>
             </div>
-          </div>
+          </Button>
         ))}
         {Array.from({ length: emptySlots }).map((_, index) => (
           <div
@@ -83,13 +85,14 @@ export default function WordSelector({
       </div>
       <div className="grid grid-cols-12">
         {wordOptions.map((wordoption: string, index: number) => (
-          <div
+          <Button
             key={index}
-            className="px-4 p-1 m-1 rounded-md border bg-slate-50 col-span-4 md:col-span-3  text-center"
+            variant="ghost"
+            className="px-6  m-1 rounded-md border bg-slate-50 col-span-4 md:col-span-3  text-center"
             onClick={() => handleOptionClick(wordoption)}
           >
             <p className="font-medium ">{wordoption}</p>
-          </div>
+          </Button>
         ))}
       </div>
     </>

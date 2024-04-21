@@ -54,12 +54,10 @@ export default function RequireAuthPlaceholder() {
           />
         </svg>
 
-        <h3 className="mt-4 text-lg font-semibold ">
-          Connect Account to Start Creating
-        </h3>
+        <h3 className="mt-4 text-lg font-semibold ">Connect Account</h3>
         <p className="mb-4 mt-2 text-sm text-muted-foreground m-2">
-          You are currently not signed in. Sign in or create an account to start
-          creating. Click the connect button to sign in or create an account.
+          You are currently not signed in. Sign in or create an account. Click
+          the connect button to sign in or create an account.
         </p>
       </div>
     </div>

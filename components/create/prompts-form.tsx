@@ -13,6 +13,11 @@ import Web3Modal from "web3modal";
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
 
+import { useRouter } from "next/navigation";
+import { set } from "mongoose";
+
+import { Puzzle } from "lucide-react";
+
 export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
   const [gameTitle, setGameTitle] = useState(".");
@@ -25,6 +30,8 @@ export default function PromptleForm() {
   const [account, setAccount] = useState<User | null>(null);
   const [timeGiven, setTimeGiven] = useState(15);
 
+  const router = useRouter();
+
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
@@ -36,16 +43,16 @@ export default function PromptleForm() {
   }, [prompts, decoys]);
 
   async function createNewGame() {
-    // const web3Modal = new Web3Modal();
-    // const connection = await web3Modal.connect();
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
 
-    // const provider = new ethers.BrowserProvider(connection);
-    // const signer = await provider.getSigner();
-    // const leaderboardsContract = new ethers.Contract(
-    //   ArbitrumSepolia.PromptleLeaderboards,
-    //   LeaderboardsAbi,
-    //   signer
-    // );
+    const provider = new ethers.BrowserProvider(connection);
+    const signer = await provider.getSigner();
+    const leaderboardsContract = new ethers.Contract(
+      ArbitrumSepolia.PromptleLeaderboards,
+      LeaderboardsAbi,
+      signer
+    );
 
     try {
       const gameData = {
@@ -60,7 +67,7 @@ export default function PromptleForm() {
       );
       console.log("res", res.data);
       const gameOffChainId = res.data._id;
-      // const tx = await leaderboardsContract.createGame(gameOffChainId);
+      const tx = leaderboardsContract.createGame(gameOffChainId);
       // await tx.wait();
       return res.data;
     } catch (error) {
@@ -109,6 +116,8 @@ export default function PromptleForm() {
         );
         const PromptResponse = res.data.newPrompt;
         console.log("Prompt Response", PromptResponse);
+        router.push(`/games`);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error in API call:", error);
@@ -118,6 +127,17 @@ export default function PromptleForm() {
   return (
     <>
       <div className="p-0.5 m-2 rounded-lg lg:w-[50%]">
+        <div className="text-center">
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex ">
+              <div className="text-lg font-bold  bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                Promptles
+              </div>
+              <Puzzle className="w-3.5 h-3.5 text-purple-500 text-xs mt-0.5 font-bold" />
+            </div>
+          </div>
+          <div className="text-2xl font-semibold">Create Promptle</div>
+        </div>
         <div className="mt-2">
           <p className="text-sm">Game Title</p>
           <Input
@@ -163,9 +183,13 @@ export default function PromptleForm() {
         </div>
 
         <div className="mt-2">
-          <Button className="mt-2 w-full" onClick={onSubmit}>
-            Create
-          </Button>
+          {loading ? (
+            <div className="text-center mt-2">Loading...</div>
+          ) : (
+            <Button className="mt-2 w-full" onClick={onSubmit}>
+              Create
+            </Button>
+          )}
         </div>
       </div>
     </>
