@@ -24,7 +24,7 @@ export default function Games() {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     if (user) {
-      const myGames = data.filter((game: any) => game.owner === user._id);
+      const myGames = data.filter((game: any) => game.owner._id === user._id);
       setMyGames(myGames);
     }
   };
