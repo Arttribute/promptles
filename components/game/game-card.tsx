@@ -13,7 +13,7 @@ export default function GameCard({ game }: { game: any }) {
     <Link href={`/games/${game._id}`}>
       <Card>
         <Image
-          src="https://github.com/shadcn.png"
+          src="/promptle-default.webp"
           width={200}
           height={200}
           alt={"game"}
