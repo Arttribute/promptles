@@ -81,7 +81,7 @@ export default function Games() {
                   </div>
                   <div className="mt-6">
                     <Link href="/create">
-                      <Button className="ml-2 px-8">Create Ptomptles</Button>
+                      <Button className="ml-2 px-8">Create Promptles</Button>
                     </Link>
                   </div>
                 </div>
