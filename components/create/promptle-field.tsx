@@ -4,6 +4,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState, useEffect } from "react";
 import { CircleX } from "lucide-react";
+import { set } from "mongoose";
 
 export default function PromptleField({
   index,
@@ -26,23 +27,37 @@ export default function PromptleField({
   const [prompt, setPrompt] = useState<string>("");
   const [decoy, setDecoy] = useState<string>("");
   const [isDecoyValid, setIsDecoyValid] = useState<boolean>(true);
+  const [promptErrorMessages, setPromptErrorMessages] = useState<string[]>([]);
+  const [decoyErrorMessages, setDecoyErrorMessages] = useState<string[]>([]);
 
   useEffect(() => {
     checkPromptValidity(prompt);
     checkDecoyValidity(decoy);
-  }, [prompt]);
+  }, [prompt, decoy]);
 
   const checkPromptValidity = (prompt: string) => {
-    if (prompt.trim().split(" ").length > 6) {
+    const specialChars = /[^A-Za-z0-9\s]/;
+    if (specialChars.test(prompt)) {
       setIsPromptValid(false);
+      setPromptErrorMessages(["Prompt should not contain special characters"]);
+    } else if (prompt.trim().split(" ").length > 6) {
+      setIsPromptValid(false);
+      setPromptErrorMessages(["Write at most 6 words for the prompt"]);
     } else {
       setIsPromptValid(true);
     }
   };
 
   const checkDecoyValidity = (decoy: string) => {
-    if (decoy.trim().split(" ").length > 12) {
+    const specialChars = /[^A-Za-z0-9\s]/;
+    if (specialChars.test(decoy)) {
       setIsDecoyValid(false);
+      setDecoyErrorMessages([
+        "Decoy words should not contain special characters",
+      ]);
+    } else if (decoy.trim().split(" ").length > 8) {
+      setIsDecoyValid(false);
+      setDecoyErrorMessages(["Write at most 8 decoy words"]);
     } else {
       setIsDecoyValid(true);
     }
@@ -89,12 +104,22 @@ export default function PromptleField({
             </Button>
           )}
         </div>
-        {!isPromptValid && (
-          <div className="text-red-500 text-sm">Write at most 6 words</div>
-        )}
-        {!isDecoyValid && (
-          <div className="text-red-500 text-sm">Write at most 12 words</div>
-        )}
+        {!isPromptValid &&
+          promptErrorMessages.map((message, index) => {
+            return (
+              <div key={index} className="text-red-500 text-sm">
+                {message}
+              </div>
+            );
+          })}
+        {!isDecoyValid &&
+          decoyErrorMessages.map((message, index) => {
+            return (
+              <div key={index} className="text-red-500 text-sm">
+                {message}
+              </div>
+            );
+          })}
       </div>
     </>
   );
