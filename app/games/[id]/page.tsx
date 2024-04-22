@@ -5,7 +5,6 @@ import axios from "axios";
 
 import AppBar from "@/components/layout/appbar";
 
-import AccountMenu from "@/components/account/account-menu";
 import Promptle from "@/components/game/promptle";
 import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
@@ -46,8 +45,10 @@ export default function Game({ params }: { params: { id: string } }) {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
-    fetchGame();
-  }, [loadingPromptles]);
+    if (game == null) {
+      fetchGame();
+    }
+  }, [loadingPromptles, game]);
 
   useEffect(() => {
     if (isCorrect) {

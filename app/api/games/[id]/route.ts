@@ -8,8 +8,8 @@ import { type NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
     const game = await Game.findById(id).populate("owner");
     const promptles = await Promptle.find({ game_id: id }).populate("owner");
     const scores = await Score.find({ game_id: id }).populate("player");
