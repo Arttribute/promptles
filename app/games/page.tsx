@@ -64,6 +64,11 @@ export default function Games() {
           </TabsContent>
           <TabsContent value="my-games">
             <div className="grid grid-cols-12 gap-2">
+              <div className="col-span-12 text-center mt-6">
+                <Link href="/create">
+                  <Button className="ml-2 px-8">Create New Game</Button>
+                </Link>
+              </div>
               {myGames &&
                 myGames.map((game: any) => (
                   <div className="col-span-3" key={game._id}>
