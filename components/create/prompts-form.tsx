@@ -14,7 +14,7 @@ import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
 
 import { useRouter } from "next/navigation";
-import { set } from "mongoose";
+import { LoaderCircle } from "lucide-react";
 
 import { Puzzle } from "lucide-react";
 
@@ -184,7 +184,9 @@ export default function PromptleForm() {
 
         <div className="mt-2">
           {loading ? (
-            <div className="text-center mt-2">Loading...</div>
+            <Button className="mt-2 w-full" disabled>
+              <LoaderCircle size={20} className="animate-spin text-white" />
+            </Button>
           ) : (
             <Button className="mt-2 w-full" onClick={onSubmit}>
               Create
