@@ -56,7 +56,7 @@ export default function Games() {
             <div className="grid grid-cols-12 gap-2">
               {games &&
                 games.map((game: any) => (
-                  <div className="col-span-3" key={game._id}>
+                  <div className="col-span-4 lg:col-span-3" key={game._id}>
                     <GameCard game={game} />
                   </div>
                 ))}
@@ -71,7 +71,7 @@ export default function Games() {
               </div>
               {myGames &&
                 myGames.map((game: any) => (
-                  <div className="col-span-3" key={game._id}>
+                  <div className="col-span-4 lg:col-span-3" key={game._id}>
                     <GameCard game={game} />
                   </div>
                 ))}

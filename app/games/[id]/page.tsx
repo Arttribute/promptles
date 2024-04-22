@@ -175,7 +175,7 @@ export default function Game({ params }: { params: { id: string } }) {
         status: "completed",
       };
       const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/promptles/${promptleId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/promptles/promptle`,
         promptleData,
         { params: { id: promptleId } }
       );
