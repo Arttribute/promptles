@@ -21,7 +21,7 @@ export default function GameCard({ game }: { game: any }) {
         />
 
         <div className="flex  m-2">
-          <Avatar>
+          <Avatar className="w-8 h-8">
             <AvatarImage src={game.owner?.picture} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
