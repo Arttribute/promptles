@@ -48,7 +48,8 @@ export default function EnterLeaderboard({
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/scores`,
         { scoreData }
       );
-      const tx = await leaderboardsContract.addScore(onchainGameIndex, score);
+      const actualGameindex = onchainGameIndex === 0 ? 0 : onchainGameIndex - 1;
+      const tx = await leaderboardsContract.addScore(actualGameindex, score);
       //await tx.wait();
       setLoading(false);
       setScoreAdded(true);
