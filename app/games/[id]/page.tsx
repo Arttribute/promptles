@@ -44,6 +44,7 @@ export default function Game({ params }: { params: { id: string } }) {
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
+    console.log("game Id from client:", params.id);
     setAccount(user);
     fetchGame();
   }, [loadingPromptles]);
