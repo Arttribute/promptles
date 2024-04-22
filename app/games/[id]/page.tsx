@@ -10,6 +10,7 @@ import PromptleTimer from "@/components/game/promptle-timer";
 import StartGameDisplay from "@/components/game/start-game-display";
 import GameEndDisplay from "@/components/game/game-end-display";
 import ScoreDisplay from "@/components/game/score-display";
+import RequireAuthPlaceholder from "@/components/account/require-auth-placeholder";
 
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
@@ -29,6 +30,7 @@ export default function Game({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [loadingPromptles, setLoadingPromptles] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
+  const [loadedAccount, setLoadedAccount] = useState(true);
   const [promptleUpdated, setPromptleUpdated] = useState(false);
   const [currentPromptleIndex, setCurrentPromptleIndex] = useState(-1);
   const [promptleCount, setPromptleCount] = useState(0);
@@ -46,6 +48,7 @@ export default function Game({ params }: { params: { id: string } }) {
     const user = userJson ? JSON.parse(userJson) : null;
     console.log("game Id from client:", params.id);
     setAccount(user);
+    setLoadedAccount(true);
     fetchGame();
   }, [loadingPromptles]);
 
@@ -190,6 +193,7 @@ export default function Game({ params }: { params: { id: string } }) {
         {loading ? (
           <div>Loading...</div>
         ) : (
+          account &&
           game && (
             <>
               {currentPromptleIndex > -1 && (
@@ -253,6 +257,7 @@ export default function Game({ params }: { params: { id: string } }) {
             </>
           )
         )}
+        {!account && loadedAccount && <RequireAuthPlaceholder />}
       </div>
     </>
   );
