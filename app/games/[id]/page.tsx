@@ -223,7 +223,7 @@ export default function Game({ params }: { params: { id: string } }) {
                     {currentPromptleIndex !== promptleCount && (
                       <>
                         <PromptleTimer
-                          initialSeconds={givenTime}
+                          initialSeconds={(game as any)?.game.time_given}
                           secondsLeft={secondsLeft}
                           setSecondsLeft={setSecondsLeft}
                           isActive={isTimerActive}
