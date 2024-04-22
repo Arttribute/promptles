@@ -160,7 +160,7 @@ export default function Game({ params }: { params: { id: string } }) {
 
   const handleNextPromptle = () => {
     if (currentPromptleIndex < promptleCount) {
-      if (attestationFailed) return;
+      //if (attestationFailed) return;
       setCurrentPromptleIndex(currentPromptleIndex + 1);
       setSecondsLeft((game as any)?.game.time_given);
       setIsCorrect(false);
@@ -180,7 +180,10 @@ export default function Game({ params }: { params: { id: string } }) {
           params: { model_id: modelId, prompt_id: promptId },
         }
       );
+      console.log("result", result);
       const promptleImages = result.data.data.images;
+
+      console.log("promptleImages", promptleImages);
 
       const promptleData = {
         images: promptleImages,
