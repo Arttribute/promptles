@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 
 import { Puzzle } from "lucide-react";
+import { Timer } from "lucide-react";
 
 export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
@@ -138,8 +139,7 @@ export default function PromptleForm() {
           </div>
           <div className="text-2xl font-semibold">Create Promptle</div>
         </div>
-        <div className="mt-2">
-          <p className="text-sm">Game Title</p>
+        <div className="mt-2 mb-2">
           <Input
             placeholder="Game Title"
             onChange={(e) => setGameTitle(e.target.value)}
@@ -147,7 +147,7 @@ export default function PromptleForm() {
         </div>
 
         <div className="font-semibold">Create your prompt puzzle game</div>
-        <div className="font-light text-sm mb-2">
+        <div className="font-light text-xs mb-2 text-gray-500">
           Write at most a 6-word prompt and a 8-word decoy for each puzzle
         </div>
 
@@ -173,7 +173,13 @@ export default function PromptleForm() {
         />
 
         <div className="mt-2">
-          <p className="text-sm">Time Given</p>
+          <div className="flex">
+            <Timer className="w-4 h-4 " />
+            <div className="text-sm font-semibold">Time given</div>
+          </div>
+          <div className="text-xs font-light text-gray-500 mb-1">
+            Set the time given to solve for each prompt
+          </div>
           <Input
             placeholder="Time Given"
             type="number"
