@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
@@ -49,10 +48,7 @@ export default function EnterLeaderboard({
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/scores`,
         { scoreData }
       );
-      const tx = await leaderboardsContract.addScore(
-        onchainGameIndex - 1,
-        score
-      );
+      const tx = await leaderboardsContract.addScore(onchainGameIndex, score);
       //await tx.wait();
       setLoading(false);
       setScoreAdded(true);
