@@ -3,6 +3,7 @@ import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
 
+import { LoaderCircle } from "lucide-react";
 import AppBar from "@/components/layout/appbar";
 
 import Promptle from "@/components/game/promptle";
@@ -191,7 +192,7 @@ export default function Game({ params }: { params: { id: string } }) {
       <AppBar />
       <div className="flex flex-col items-center justify-center mt-6 h-screen">
         {loading ? (
-          <div>Loading...</div>
+          <LoaderCircle size={40} className="animate-spin text-gray-500" />
         ) : (
           account &&
           game && (
