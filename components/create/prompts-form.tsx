@@ -117,6 +117,8 @@ export default function PromptleForm() {
         );
         const PromptResponse = res.data.newPrompt;
         console.log("Prompt Response", PromptResponse);
+        //wait for images to be generated
+        await new Promise((r) => setTimeout(r, 5000));
         router.push(`/games`);
         setLoading(false);
       }
