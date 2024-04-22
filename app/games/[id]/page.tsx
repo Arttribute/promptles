@@ -39,7 +39,6 @@ export default function Game({ params }: { params: { id: string } }) {
   const [isCorrect, setIsCorrect] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [score, setScore] = useState(0);
-  const [wrongAttempts, setWrongAttempts] = useState(0);
   const [onchainGameIndex, setOnchainGameIndex] = useState(0);
   const [gameLeaderboard, setGameLeaderboard] = useState([]);
   const [isFirstPlay, setIsFirstPlay] = useState(false);
