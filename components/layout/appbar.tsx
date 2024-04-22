@@ -1,9 +1,7 @@
 "use client";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
-import Link from "next/link";
 import AccountMenu from "../account/account-menu";
-import { Puzzle } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 
 export default function AppBar() {
