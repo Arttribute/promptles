@@ -45,10 +45,8 @@ export default function Game({ params }: { params: { id: string } }) {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
-    if (game == null) {
-      fetchGame();
-    }
-  }, [loadingPromptles, game]);
+    fetchGame();
+  }, [loadingPromptles]);
 
   useEffect(() => {
     if (isCorrect) {
@@ -257,3 +255,7 @@ export default function Game({ params }: { params: { id: string } }) {
     </>
   );
 }
+
+export const config = {
+  ssr: false,
+};
