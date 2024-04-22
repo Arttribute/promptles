@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import { LoaderCircle } from "lucide-react";
 import AppBar from "@/components/layout/appbar";
@@ -23,6 +24,7 @@ import {
 } from "@/lib/ethsign";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
+import { set } from "mongoose";
 
 const givenTime = 15;
 
@@ -41,6 +43,8 @@ export default function Game({ params }: { params: { id: string } }) {
   const [score, setScore] = useState(0);
   const [onchainGameIndex, setOnchainGameIndex] = useState(0);
   const [gameLeaderboard, setGameLeaderboard] = useState([]);
+  const [loadingAttestation, setLoadingAttestation] = useState(false);
+  const [attestationFailed, setAttestationFailed] = useState(false);
   const [isFirstPlay, setIsFirstPlay] = useState(false);
 
   useEffect(() => {
@@ -101,6 +105,7 @@ export default function Game({ params }: { params: { id: string } }) {
   }
 
   async function handleAttest() {
+    setLoadingAttestation(true);
     if (!account || !game) return;
     // search for existing attestation
     const web3Modal = new Web3Modal();
@@ -124,10 +129,17 @@ export default function Game({ params }: { params: { id: string } }) {
         account.web3Address,
         game.game._id
       );
+      //if attestation is not created do not leave start page
+      if (!newAtt) {
+        setLoadingAttestation(false);
+        setAttestationFailed(true);
+      }
+
       setIsFirstPlay(true);
     } else {
       setIsFirstPlay(false);
     }
+    setLoadingAttestation(false);
   }
 
   async function loadPromptles() {
@@ -148,6 +160,7 @@ export default function Game({ params }: { params: { id: string } }) {
 
   const handleNextPromptle = () => {
     if (currentPromptleIndex < promptleCount) {
+      if (attestationFailed) return;
       setCurrentPromptleIndex(currentPromptleIndex + 1);
       setSecondsLeft((game as any)?.game.time_given);
       setIsCorrect(false);
@@ -235,13 +248,29 @@ export default function Game({ params }: { params: { id: string } }) {
                 </div>
               )}
               {currentPromptleIndex === -1 && (
-                <StartGameDisplay
-                  gameTitle={(game as any)?.game.game_title}
-                  promptlesCount={promptleCount}
-                  onStartGame={handleNextPromptle}
-                  timeGiven={(game as any)?.game.time_given}
-                  handleAttest={handleAttest}
-                />
+                <>
+                  <StartGameDisplay
+                    gameTitle={(game as any)?.game.game_title}
+                    promptlesCount={promptleCount}
+                    onStartGame={handleNextPromptle}
+                    timeGiven={(game as any)?.game.time_given}
+                    handleAttest={handleAttest}
+                  />
+                  {loadingAttestation && (
+                    <div className="flex text-sm font-light text-gray-500 mt-4">
+                      <LoaderCircle className="animate-spin text-gray-500 h-4 w-4 mr-1.5" />
+                      <p>Verifying leaderboard eligibility with ,</p>
+                      <em> Sign protocol </em>
+                    </div>
+                  )}
+                  {attestationFailed && (
+                    <div className="text-sm font-light text-red-500 mt-4">
+                      <p>
+                        Failed to create attestation for leaderboard eligibility
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
               {currentPromptleIndex === promptleCount && (
                 <GameEndDisplay
