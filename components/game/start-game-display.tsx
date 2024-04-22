@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Puzzle } from "lucide-react";
 
+import { Play as PlayIcon } from "lucide-react";
+
 export default function StartGameDisplay({
   gameTitle,
   promptlesCount,
@@ -39,14 +41,14 @@ export default function StartGameDisplay({
           </div>
 
           <Button
-            className="rounded-lg mt-1"
+            className="rounded-lg mt-1 px-6"
             onClick={async () => {
               await handleAttest();
               onStartGame();
             }}
           >
             Start Game
-            <ChevronRight size={20} className="ml-0.5 w-4 h-4" />
+            <PlayIcon size={20} className="ml-0.5 w-4 h-4" />
           </Button>
         </div>
       </div>
