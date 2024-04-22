@@ -58,8 +58,8 @@ export default function AccountMenu() {
                 </MenubarLabel>
                 <MenubarSeparator />
                 <MenubarItem inset>
-                  <Link href="/" passHref>
-                    <p>Dashboard</p>
+                  <Link href="/profile" passHref>
+                    <p>Profile</p>
                   </Link>
                 </MenubarItem>
                 <MenubarSeparator />
