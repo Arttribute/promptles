@@ -137,7 +137,7 @@ export default function Game({ params }: { params: { id: string } }) {
     for (let i = 0; i < gamePromptles.length; i++) {
       const promptle = gamePromptles[i];
       console.log("loading promptles! promptle", promptle);
-      if (promptle.images.length === "completed") continue;
+      if (promptle.images.length > 0) continue;
       await getPromptleImagesAndUpdate(
         promptle._id,
         promptle.prompt_id,
