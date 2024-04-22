@@ -77,6 +77,7 @@ export default function Game({ params }: { params: { id: string } }) {
       LeaderboardsAbi,
       provider
     );
+    console.log("game", data);
     console.log("gameId", data.game._id);
     const gameIndexOnchain = await leaderboardsContract.getGameIndex(
       data.game._id
