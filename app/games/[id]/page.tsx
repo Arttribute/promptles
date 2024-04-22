@@ -61,7 +61,7 @@ export default function Game({ params }: { params: { id: string } }) {
 
   async function fetchGame() {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/games/${params.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/games/game`,
       {
         params: { id: params.id },
       }

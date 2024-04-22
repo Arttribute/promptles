@@ -10,12 +10,10 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
-    console.log("id:", id);
-    const gameres = await Game.find({ _id: id }).populate("owner");
-    const game = gameres[0];
+    const game = await Game.findById(id).populate("owner");
     const promptles = await Promptle.find({ game_id: id }).populate("owner");
     const scores = await Score.find({ game_id: id }).populate("player");
-    return new NextResponse(JSON.stringify({ id, game, promptles, scores }), {
+    return new NextResponse(JSON.stringify({ game, promptles, scores }), {
       status: 200,
     });
   } catch (error: any) {
