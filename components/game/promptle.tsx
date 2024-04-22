@@ -27,6 +27,10 @@ export default function Promptle({
 }) {
   const [wrongAttempts, setWrongAttempts] = useState(0);
 
+  const correctWords = promptle.solution
+    .split(" ")
+    .filter((word: any) => word !== "");
+
   useEffect(() => {
     if (isCorrect) {
       updateScore();
@@ -51,7 +55,7 @@ export default function Promptle({
       {secondsLeft > 0 && !isCorrect && (
         <WordSelector
           words={promptle.promptle_words}
-          correctWords={promptle.solution.split(" ")}
+          correctWords={correctWords}
           isCorrect={isCorrect}
           setIsCorrect={setIsCorrect}
           wrongAttempts={wrongAttempts}

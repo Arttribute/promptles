@@ -88,9 +88,11 @@ export default function PromptleForm() {
         const correctWords = prompts[i].split(" ");
         words.push(...correctWords);
         const shuffledWords = words.sort(() => Math.random() - 0.5);
+        //remove empty strings
+        const promptleWords = shuffledWords.filter((word) => word !== "");
         const promptleData = {
           game_id: createdGameData._id,
-          promptle_words: shuffledWords,
+          promptle_words: promptleWords,
           solution: prompts[i],
           owner: account?._id,
         };
