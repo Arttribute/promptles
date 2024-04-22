@@ -33,7 +33,7 @@ export default function LeaderBoard({ gamescores }: { gamescores: any[] }) {
                   alt="submission"
                   width={38}
                   height={38}
-                  className="rounded-lg object-cover transition-all aspect-[1]"
+                  className="rounded-full object-cover transition-all aspect-[1]"
                 />
               </TableCell>
               <TableCell className="w-[200px]">{score.player?.name}</TableCell>
