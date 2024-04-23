@@ -2,10 +2,19 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { Puzzle } from "lucide-react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Play as PlayIcon } from "lucide-react";
+import { SquareArrowOutUpRight } from "lucide-react";
+
+import LeaderBoard from "./leaderboard";
 
 export default function StartGameDisplay({
   gameTitle,
@@ -13,12 +22,14 @@ export default function StartGameDisplay({
   onStartGame,
   timeGiven,
   handleAttest,
+  gamescores,
 }: {
   gameTitle: string;
   promptlesCount: number;
   onStartGame: () => void;
   timeGiven: number;
   handleAttest: () => void;
+  gamescores: any;
 }) {
   return (
     <>
@@ -50,6 +61,18 @@ export default function StartGameDisplay({
             Start Game
             <PlayIcon size={20} className="ml-0.5 w-4 h-4" />
           </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="ghost" className="mt-2">
+                View Leaderboard
+                <SquareArrowOutUpRight className="w-4 h-4 ml-0.5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Game Leaderboard</DialogTitle>
+              {gamescores && <LeaderBoard gamescores={gamescores} />}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </>

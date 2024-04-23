@@ -2,7 +2,6 @@
 import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 import { LoaderCircle } from "lucide-react";
 import AppBar from "@/components/layout/appbar";
@@ -24,7 +23,6 @@ import {
 } from "@/lib/ethsign";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import { set } from "mongoose";
 
 const givenTime = 15;
 
@@ -258,6 +256,7 @@ export default function Game({ params }: { params: { id: string } }) {
                     onStartGame={handleNextPromptle}
                     timeGiven={(game as any)?.game.time_given}
                     handleAttest={handleAttest}
+                    gamescores={(game as any)?.scores}
                   />
                   {loadingAttestation && (
                     <div className="flex text-sm font-light text-gray-500 mt-4">
