@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RequireAuthPlaceholder from "@/components/account/require-auth-placeholder";
+import { LoaderCircle } from "lucide-react";
 
 import GameCard from "@/components/game/game-card";
 
@@ -13,9 +14,11 @@ export default function Games() {
   const [games, setGames] = useState([]);
   const [myGames, setMyGames] = useState([]);
   const [account, setAccount] = useState(null);
+  const [loadinigGames, setLoadingGames] = useState(false);
   const [loadedAccount, setLoadedAccount] = useState(false);
 
   const getGames = async () => {
+    setLoadingGames(true);
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/games`, {
       next: { revalidate: 5 },
     });
@@ -27,6 +30,7 @@ export default function Games() {
       const myGames = data.filter((game: any) => game.owner._id === user._id);
       setMyGames(myGames);
     }
+    setLoadingGames(false);
   };
 
   useEffect(() => {
@@ -54,6 +58,11 @@ export default function Games() {
           </div>
           <TabsContent value="all-games">
             <div className="grid grid-cols-12 gap-2">
+              {loadinigGames && (
+                <div className="col-span-12 flex flex-col items-center justify-center mt-6">
+                  <LoaderCircle size={32} className="animate-spin" />
+                </div>
+              )}
               {games &&
                 games.map((game: any) => (
                   <div className="col-span-4 lg:col-span-3" key={game._id}>
@@ -69,6 +78,13 @@ export default function Games() {
                   <Button className="ml-2 px-8">Create New Game</Button>
                 </Link>
               </div>
+
+              {loadinigGames && (
+                <div className="col-span-12 flex flex-col items-center justify-center mt-6">
+                  <LoaderCircle size={32} className="animate-spin" />
+                </div>
+              )}
+
               {myGames &&
                 myGames.map((game: any) => (
                   <div className="col-span-4 lg:col-span-3" key={game._id}>
