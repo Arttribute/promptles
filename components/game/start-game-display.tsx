@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Puzzle } from "lucide-react";
 
@@ -13,6 +13,7 @@ import {
 
 import { Play as PlayIcon } from "lucide-react";
 import { SquareArrowOutUpRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import LeaderBoard from "./leaderboard";
 
@@ -52,7 +53,7 @@ export default function StartGameDisplay({
           </div>
 
           <Button
-            className="rounded-lg mt-1 px-6"
+            className="rounded-lg mt-1 px-6 w-52"
             onClick={async () => {
               await handleAttest();
               onStartGame();
@@ -63,7 +64,7 @@ export default function StartGameDisplay({
           </Button>
           <Dialog>
             <DialogTrigger>
-              <Button variant="ghost" className="mt-2">
+              <Button variant="ghost" className="mt-2 w-52">
                 View Leaderboard
                 <SquareArrowOutUpRight className="w-4 h-4 ml-0.5" />
               </Button>
@@ -73,6 +74,17 @@ export default function StartGameDisplay({
               {gamescores && <LeaderBoard gamescores={gamescores} />}
             </DialogContent>
           </Dialog>
+          <div className="mt-4">
+            <Link href="/games">
+              <Button
+                variant="ghost"
+                className="rounded-lg mt-1 text-xs font-light text-gray-500 w-52"
+              >
+                Exit Game
+                <ChevronRight size={20} className=" w-3.5 h-3.5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </>
