@@ -85,17 +85,15 @@ export default function Game({ params }: { params: { id: string } }) {
     );
     console.log("game", data);
     console.log("gameId", data.game._id);
-    const gameIndexOnchain = await leaderboardsContract.getGameIndex(
-      data.game._id
-    );
-    const gameIndexOnchainToNumber = Number(gameIndexOnchain);
-    console.log("gameIndexOnchain", gameIndexOnchainToNumber);
-    console.log("gameIndexOnchain type", typeof gameIndexOnchainToNumber);
-    setOnchainGameIndex(gameIndexOnchainToNumber);
+    // const gameIndexOnchain = await leaderboardsContract.getGameIndex(
+    //   data.game._id
+    // );
+    // const gameIndexOnchainToNumber = Number(gameIndexOnchain);
+    // console.log("gameIndexOnchain", gameIndexOnchainToNumber);
+    // console.log("gameIndexOnchain type", typeof gameIndexOnchainToNumber);
+    // setOnchainGameIndex(gameIndexOnchainToNumber);
     // const gameLeaderboardOnchain =
-    //   await leaderboardsContract.getGameLeaderboard(
-    //     gameIndexOnchainToNumber - 1
-    //   ); // -1 since actual index starts from 0 in the contract but 0 reserved for non-existent games
+    //   await leaderboardsContract.getGameLeaderboard(gameIndexOnchainToNumber);
     // console.log("gameLeaderboardOnchain", gameLeaderboardOnchain);
     // setGameLeaderboard(gameLeaderboardOnchain);
 
