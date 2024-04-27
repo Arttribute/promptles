@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Chakra_Petch } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const chakra_petch = Chakra_Petch({
@@ -21,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={chakra_petch.className}>{children}</body>
+      <body className={chakra_petch.className}>
+        {children} <Analytics />
+      </body>
     </html>
   );
 }
