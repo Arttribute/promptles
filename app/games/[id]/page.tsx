@@ -15,14 +15,7 @@ import RequireAuthPlaceholder from "@/components/account/require-auth-placeholde
 
 import { ArbitrumSepolia } from "@/lib/contractAddresses";
 import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
-import {
-  CreatedAttestation,
-  findAttestation,
-  makeAttestation,
-  queryAttestations,
-} from "@/lib/ethsign";
 import { ethers } from "ethers";
-import Web3Modal from "web3modal";
 
 const givenTime = 15;
 
@@ -85,57 +78,8 @@ export default function Game({ params }: { params: { id: string } }) {
     );
     console.log("game", data);
     console.log("gameId", data.game._id);
-    // const gameIndexOnchain = await leaderboardsContract.getGameIndex(
-    //   data.game._id
-    // );
-    // const gameIndexOnchainToNumber = Number(gameIndexOnchain);
-    // console.log("gameIndexOnchain", gameIndexOnchainToNumber);
-    // console.log("gameIndexOnchain type", typeof gameIndexOnchainToNumber);
-    // setOnchainGameIndex(gameIndexOnchainToNumber);
-    // const gameLeaderboardOnchain =
-    //   await leaderboardsContract.getGameLeaderboard(gameIndexOnchainToNumber);
-    // console.log("gameLeaderboardOnchain", gameLeaderboardOnchain);
-    // setGameLeaderboard(gameLeaderboardOnchain);
 
     setLoading(false);
-  }
-
-  async function handleAttest() {
-    setLoadingAttestation(true);
-    if (!account || !game) return;
-    // search for existing attestation
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-
-    const attestations = await queryAttestations(
-      signer.address,
-      account.web3Address
-    );
-
-    const att = findAttestation(game.game._id, attestations.attestations ?? []);
-
-    console.log("att", att);
-
-    // if not found, create attestation
-    if (!att) {
-      const newAtt: CreatedAttestation = await makeAttestation(
-        account.web3Address,
-        game.game._id
-      );
-      //if attestation is not created do not leave start page
-      if (!newAtt) {
-        setLoadingAttestation(false);
-        setAttestationFailed(true);
-      }
-
-      setIsFirstPlay(true);
-    } else {
-      setIsFirstPlay(false);
-    }
-    setLoadingAttestation(false);
   }
 
   async function loadPromptles() {
@@ -253,7 +197,6 @@ export default function Game({ params }: { params: { id: string } }) {
                     promptlesCount={promptleCount}
                     onStartGame={handleNextPromptle}
                     timeGiven={(game as any)?.game.time_given}
-                    handleAttest={handleAttest}
                     gamescores={(game as any)?.scores}
                   />
                   {loadingAttestation && (

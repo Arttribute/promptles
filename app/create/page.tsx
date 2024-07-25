@@ -23,11 +23,11 @@ export default function Create() {
     <div>
       <AppBar />
 
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center mt-16">
         {account != null ? <PromptsForm /> : null}
 
         {loadedAccount && !account ? (
-          <div className="m-12">
+          <div className=" mt-12">
             <RequireAuthPlaceholder />{" "}
           </div>
         ) : null}

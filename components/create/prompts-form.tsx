@@ -18,11 +18,13 @@ import { LoaderCircle } from "lucide-react";
 
 import { Puzzle } from "lucide-react";
 import { Timer } from "lucide-react";
+import { ModelSelector } from "./model-selector";
 
 export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
   const [gameTitle, setGameTitle] = useState(".");
   const [description, setDescription] = useState(".");
+  const [selectedModelId, setSelectedModelId] = useState("");
   const [prompts, setPrompts] = useState<string[]>([]);
   const [decoys, setDecoys] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -44,17 +46,6 @@ export default function PromptleForm() {
   }, [prompts, decoys]);
 
   async function createNewGame() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-    const leaderboardsContract = new ethers.Contract(
-      ArbitrumSepolia.PromptleLeaderboards,
-      LeaderboardsAbi,
-      signer
-    );
-
     try {
       const gameData = {
         game_title: gameTitle,
@@ -68,8 +59,7 @@ export default function PromptleForm() {
       );
       console.log("res", res.data);
       const gameOffChainId = res.data._id;
-      const tx = leaderboardsContract.createGame(gameOffChainId);
-      // await tx.wait();
+
       return res.data;
     } catch (error) {
       console.error("Error in creating game", error);
@@ -80,6 +70,7 @@ export default function PromptleForm() {
     setLoading(true);
     try {
       //create game
+      console.log("model id", selectedModelId);
       const createdGameData = await createNewGame();
 
       for (let i = 0; i < prompts.length; i++) {
@@ -96,7 +87,7 @@ export default function PromptleForm() {
           solution: prompts[i],
           owner: account?._id,
         };
-        let promptToken = ""; //TODO: replace with this `${tunedModel.modeldata.token} style` || "sks style";
+        let promptToken = "sks style"; //TODO: replace with this `${tunedModel.modeldata.token} style` || "sks style";
         const textToImageObject = {
           text: `${prompts[i]} ${promptToken}`,
           negative_prompt: "",
@@ -113,14 +104,14 @@ export default function PromptleForm() {
           {
             promptleData,
             textToImageObject,
-            modelId: "690204",
+            modelId: selectedModelId,
             cost: totalCost,
           }
         );
         const PromptResponse = res.data.newPrompt;
         console.log("Prompt Response", PromptResponse);
         //wait for images to be generated
-        await new Promise((r) => setTimeout(r, 10000));
+
         router.push(`/games`);
         setLoading(false);
       }
@@ -131,7 +122,7 @@ export default function PromptleForm() {
 
   return (
     <>
-      <div className="p-0.5 m-2 rounded-lg lg:w-[50%]">
+      <div className="p-1 m-2 rounded-lg lg:w-[50%]">
         <div className="text-center">
           <div className="flex flex-col items-center justify-center">
             <div className="flex ">
@@ -151,6 +142,9 @@ export default function PromptleForm() {
         </div>
 
         <div className="font-semibold">Create your prompt puzzle game</div>
+        <div className="my-2">
+          <ModelSelector setSelectedModelId={setSelectedModelId} />
+        </div>
         <div className="font-light text-xs mb-2 text-gray-500">
           Write at most a 6-word prompt and a 8-word decoy for each puzzle
         </div>
@@ -171,11 +165,11 @@ export default function PromptleForm() {
             ))}
           </div>
         )}
+
         <AddPromptField
           promptFieldsCount={promptFieldsCount}
           setPromptFieldCount={setPromptFieldCount}
         />
-
         <div className="mt-2">
           <div className="flex">
             <Timer className="w-4 h-4 " />

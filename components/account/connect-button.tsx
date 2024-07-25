@@ -2,9 +2,10 @@
 import { useCallback, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useMagicContext } from "@/components/providers/MagicProvider";
+import { useMinipay } from "@/components/providers/MinipayProvider";
 import { User } from "@/models/User";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
+import axios from "axios";
 
 interface Props {
   action: "Connect account" | "Disconnect";
@@ -12,55 +13,80 @@ interface Props {
   setAccount: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export default function ConnectButton({
-  action,
-  setAccount,
-  buttonVariant,
-}: Props) {
+const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
   const [disabled, setDisabled] = useState(false);
+  const { magic } = useMagicContext();
+  const { minipay } = useMinipay();
 
   const postConnect = async (account: string, email?: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ web3Address: account, email }),
-    });
-    if (res.ok) {
-      console.log("Connected to server");
-    } else {
-      console.error("Failed to connect to server");
-    }
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
+        {
+          web3Address: account,
+          email,
+        }
+      );
 
-    const data = await res.json();
-    return data;
+      if (res.status === 200 || res.status === 201) {
+        console.log("Connected to server");
+        return res.data;
+      } else {
+        throw new Error(`${res.statusText}: ${res.data}`);
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (typeof error === "string") return error;
+      return error.toString();
+    }
   };
 
   const connect = useCallback(async () => {
     try {
       setDisabled(true);
 
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.BrowserProvider(connection);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-      const email = address; //TODO: get email from user
-      const data = await postConnect(address, email);
-      console.log("User Data", data);
+      if (minipay) {
+        const data = await postConnect(minipay.address);
+        const userdata = {
+          ...data,
+          thirdpartyWallet: false,
+        };
 
-      localStorage.setItem("user", JSON.stringify(data));
-      setAccount(data);
-    } catch (error) {
-      setDisabled(false);
+        localStorage.setItem("user", JSON.stringify(userdata));
+        setAccount(data);
+      } else {
+        if (!magic) throw new Error("Magic not connected");
+        const accounts = await magic.wallet.connectWithUI();
+
+        const userInfo = await magic.user.getInfo();
+        console.log("User Info", userInfo);
+        const email = userInfo.email || accounts[0]; //If the user does not have an email, we will use the account as the email
+        console.log("Email", email);
+        console.log("Accounts", accounts[0]);
+
+        const data = await postConnect(accounts[0], email);
+        const userdata = {
+          ...data,
+          thirdpartyWallet: email === accounts[0], //Since we are using magic to get the email, we can assume that the user is using a third party wallet if the email is the same as the account
+        };
+
+        console.log("User Data", userdata);
+
+        localStorage.setItem("user", JSON.stringify(userdata));
+        setAccount(data);
+      }
+    } catch (error: any) {
       console.error(error);
+    } finally {
+      setDisabled(false);
     }
-  }, [setAccount]);
+  }, [magic, minipay, setAccount]);
 
   const disconnect = useCallback(async () => {
+    if (!magic) return;
     try {
       setDisabled(true);
+      await magic.user.logout();
       localStorage.removeItem("user");
       setDisabled(false);
       setAccount(null);
@@ -68,31 +94,31 @@ export default function ConnectButton({
       setDisabled(false);
       console.error(error);
     }
-  }, [setAccount]);
+  }, [magic, setAccount]);
 
   return (
-    <>
-      <Button
-        variant={buttonVariant || "ghost"}
-        size="sm"
-        disabled={disabled}
-        onClick={action == "Connect account" ? connect : disconnect}
-        className="rounded-lg px-8 font-semibold"
+    <Button
+      variant={buttonVariant || "ghost"}
+      size="sm"
+      disabled={disabled}
+      onClick={action == "Connect account" ? connect : disconnect}
+      className="rounded-lg px-8 font-semibold"
+    >
+      <p
+        className={
+          action == "Connect account"
+            ? "bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+            : "font-medium"
+        }
       >
-        <p
-          className={
-            action == "Connect account"
-              ? "bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
-              : "font-medium"
-          }
-        >
-          {disabled ? (
-            <Loader2 className="mx-auto h-4 w-4 animate-spin text-indigo-700" />
-          ) : (
-            action
-          )}
-        </p>
-      </Button>
-    </>
+        {disabled ? (
+          <Loader2 className="mx-auto h-4 w-4 animate-spin text-indigo-700" />
+        ) : (
+          action
+        )}
+      </p>
+    </Button>
   );
-}
+};
+
+export default ConnectButton;

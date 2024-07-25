@@ -22,14 +22,12 @@ export default function StartGameDisplay({
   promptlesCount,
   onStartGame,
   timeGiven,
-  handleAttest,
   gamescores,
 }: {
   gameTitle: string;
   promptlesCount: number;
   onStartGame: () => void;
   timeGiven: number;
-  handleAttest: () => void;
   gamescores: any;
 }) {
   return (
@@ -55,7 +53,6 @@ export default function StartGameDisplay({
           <Button
             className="rounded-lg mt-1 px-6 w-52"
             onClick={async () => {
-              await handleAttest();
               onStartGame();
             }}
           >
