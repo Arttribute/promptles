@@ -122,7 +122,7 @@ export default function PromptleForm() {
 
   return (
     <>
-      <div className="p-0.5 m-2 rounded-lg lg:w-[50%]">
+      <div className="p-1 m-2 rounded-lg lg:w-[50%]">
         <div className="text-center">
           <div className="flex flex-col items-center justify-center">
             <div className="flex ">

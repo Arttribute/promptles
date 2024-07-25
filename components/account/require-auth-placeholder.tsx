@@ -19,7 +19,7 @@ export default function RequireAuthPlaceholder() {
     }
   }, [account]);
   return (
-    <div className="flex p-24 shrink-0 items-center justify-center rounded-md border border-dashed">
+    <div className="mx-4 flex p-24 shrink-0 items-center justify-center rounded-md border border-dashed">
       <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
         <svg
           width="100px"

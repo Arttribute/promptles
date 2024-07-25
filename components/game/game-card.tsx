@@ -14,10 +14,10 @@ export default function GameCard({ game }: { game: any }) {
       <Card>
         <Image
           src="/promptle-default.webp"
-          width={200}
-          height={200}
+          width={180}
+          height={180}
           alt={"game"}
-          className="aspect-[1] rounded-md  m-1"
+          className="aspect-[1] rounded-md m-1 lg:m-2"
         />
 
         <div className="flex  m-2">

@@ -15,7 +15,7 @@ export default function AppBar() {
           </MenubarTrigger>
         </MenubarMenu>
         <div className="grow" />
-        <div className="hidden lg:flex">
+        <div className="flex">
           <AccountMenu />
         </div>
       </Menubar>

@@ -57,7 +57,7 @@ export default function Games() {
             </TabsList>
           </div>
           <TabsContent value="all-games">
-            <div className="grid grid-cols-12 gap-2">
+            <div className="grid grid-cols-12 gap-2 p-4">
               {loadinigGames && (
                 <div className="col-span-12 flex flex-col items-center justify-center mt-6">
                   <LoaderCircle size={32} className="animate-spin" />
@@ -65,7 +65,7 @@ export default function Games() {
               )}
               {games &&
                 games.map((game: any) => (
-                  <div className="col-span-4 lg:col-span-3" key={game._id}>
+                  <div className="col-span-6 lg:col-span-3" key={game._id}>
                     <GameCard game={game} />
                   </div>
                 ))}
@@ -75,7 +75,7 @@ export default function Games() {
             <div className="grid grid-cols-12 gap-2">
               <div className="col-span-12 text-center mt-6">
                 <Link href="/create">
-                  <Button className="ml-2 px-8">Create New Game</Button>
+                  <Button className="ml-2 mb-2 px-8">Create New Game</Button>
                 </Link>
               </div>
 
@@ -87,7 +87,7 @@ export default function Games() {
 
               {myGames &&
                 myGames.map((game: any) => (
-                  <div className="col-span-4 lg:col-span-3" key={game._id}>
+                  <div className="col-span-6 lg:col-span-3" key={game._id}>
                     <GameCard game={game} />
                   </div>
                 ))}
