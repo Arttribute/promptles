@@ -8,13 +8,8 @@ import AddPromptField from "./add-prompt-field";
 import axios from "axios";
 import { User } from "@/models/User";
 
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
-import { ArbitrumSepolia } from "@/lib/contractAddresses";
-import { LeaderboardsAbi } from "@/lib/abi/leaderboards";
-
 import { useRouter } from "next/navigation";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Sparkles } from "lucide-react";
 
 import { Puzzle } from "lucide-react";
 import { Timer } from "lucide-react";
@@ -24,14 +19,16 @@ export default function PromptleForm() {
   const [promptFieldsCount, setPromptFieldCount] = useState(1);
   const [gameTitle, setGameTitle] = useState(".");
   const [description, setDescription] = useState(".");
+  const [gametheme, setGametheme] = useState(".");
   const [selectedModelId, setSelectedModelId] = useState("");
   const [prompts, setPrompts] = useState<string[]>([]);
   const [decoys, setDecoys] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [numberOfImages, setNumberOfImages] = useState(1);
+  const [loadingPrompts, setLoadingPrompts] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
-  const [timeGiven, setTimeGiven] = useState(15);
+  const [timeGiven, setTimeGiven] = useState(20);
 
   const router = useRouter();
 
@@ -44,6 +41,13 @@ export default function PromptleForm() {
     console.log("prompts", prompts);
     console.log("decoys", decoys);
   }, [prompts, decoys]);
+
+  //use effect to get new promptfields when prompts and decoys are generated and set each prompt and decoy fields
+  useEffect(() => {
+    if (prompts.length > 0) {
+      setPromptFieldCount(prompts.length);
+    }
+  }, [prompts]);
 
   async function createNewGame() {
     try {
@@ -64,6 +68,29 @@ export default function PromptleForm() {
     } catch (error) {
       console.error("Error in creating game", error);
     }
+  }
+
+  async function generatePrompts() {
+    setLoadingPrompts(true);
+    try {
+      const response = await fetch("/api/llm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          input: gametheme,
+        }),
+      });
+      console.log("response", response);
+      const res = await response.json();
+      console.log("res", res);
+      setPrompts(res.prompts);
+      setDecoys(res.decoys);
+    } catch (error) {
+      console.error("Error in generating prompts", error);
+    }
+    setLoadingPrompts(false);
   }
 
   async function onSubmit() {
@@ -90,7 +117,7 @@ export default function PromptleForm() {
         let promptToken = "sks style"; //TODO: replace with this `${tunedModel.modeldata.token} style` || "sks style";
         const textToImageObject = {
           text: `${prompts[i]} ${promptToken}`,
-          negative_prompt: "",
+          negative_prompt: "ugly ",
           super_resolution: true,
           face_correct: true,
           num_images: 1,
@@ -149,6 +176,31 @@ export default function PromptleForm() {
           Write at most a 6-word prompt and a 8-word decoy for each puzzle
         </div>
 
+        <div className="flex mt-2 mb-2">
+          <Input
+            placeholder="give us your game theme or topic and AI  will generate prompts for you"
+            onChange={(e) => setGametheme(e.target.value)}
+            className="m-1 ml-0"
+          />
+          {loadingPrompts ? (
+            <Button variant="outline" className="m-1" disabled>
+              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                Generating...
+              </p>
+              <LoaderCircle size={20} className="animate-spin text-white" />
+            </Button>
+          ) : (
+            <Button variant="outline" className="m-1" onClick={generatePrompts}>
+              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                Generate with AI
+              </p>
+              <Sparkles className="m-1 h-3 w-3 text-purple-500" />
+            </Button>
+          )}
+        </div>
+        <div className="font-light text-xs mb-2 text-gray-500">
+          Create or edit each prompt and decoy manually
+        </div>
         {promptFieldsCount > 0 && (
           <div>
             {[...Array(promptFieldsCount)].map((_, index) => (
