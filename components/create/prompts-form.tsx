@@ -149,7 +149,7 @@ export default function PromptleForm() {
 
   return (
     <>
-      <div className="p-1 m-2 rounded-lg lg:w-[50%]">
+      <div className="p-2 m-2 rounded-lg lg:w-[50%]">
         <div className="text-center">
           <div className="flex flex-col items-center justify-center">
             <div className="flex ">
@@ -161,93 +161,99 @@ export default function PromptleForm() {
           </div>
           <div className="text-2xl font-semibold">Create Promptle</div>
         </div>
-        <div className="mt-2 mb-2">
-          <Input
-            placeholder="Game Title"
-            onChange={(e) => setGameTitle(e.target.value)}
-          />
-        </div>
+        <div className="m-2">
+          <div className="mt-2 mb-2">
+            <Input
+              placeholder="Game Title"
+              onChange={(e) => setGameTitle(e.target.value)}
+            />
+          </div>
 
-        <div className="font-semibold">Create your prompt puzzle game</div>
-        <div className="my-2">
-          <ModelSelector setSelectedModelId={setSelectedModelId} />
-        </div>
-        <div className="font-light text-xs mb-2 text-gray-500">
-          Write at most a 6-word prompt and a 8-word decoy for each puzzle
-        </div>
+          <div className="font-semibold">Create your prompt puzzle game</div>
+          <div className="my-2">
+            <ModelSelector setSelectedModelId={setSelectedModelId} />
+          </div>
+          <div className="font-light text-xs mb-2 text-gray-500">
+            Write at most a 6-word prompt and a 8-word decoy for each puzzle
+          </div>
 
-        <div className="flex mt-2 mb-2">
-          <Input
-            placeholder="give us your game theme or topic and AI  will generate prompts for you"
-            onChange={(e) => setGametheme(e.target.value)}
-            className="m-1 ml-0"
-          />
-          {loadingPrompts ? (
-            <Button variant="outline" className="m-1" disabled>
-              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                Generating...
-              </p>
-              <LoaderCircle size={20} className="animate-spin text-white" />
-            </Button>
-          ) : (
-            <Button variant="outline" className="m-1" onClick={generatePrompts}>
-              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                Generate with AI
-              </p>
-              <Sparkles className="m-1 h-3 w-3 text-purple-500" />
-            </Button>
+          <div className="flex mt-2 mb-2">
+            <Input
+              placeholder="give us your game theme or topic and AI  will generate prompts for you"
+              onChange={(e) => setGametheme(e.target.value)}
+              className="m-1 ml-0"
+            />
+            {loadingPrompts ? (
+              <Button variant="outline" className="m-1" disabled>
+                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                  Generating...
+                </p>
+                <LoaderCircle size={20} className="animate-spin text-white" />
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="m-1"
+                onClick={generatePrompts}
+              >
+                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                  Generate with AI
+                </p>
+                <Sparkles className="m-1 h-3 w-3 text-purple-500" />
+              </Button>
+            )}
+          </div>
+          <div className="font-light text-xs mb-2 text-gray-500">
+            Create or edit each prompt and decoy manually
+          </div>
+          {promptFieldsCount > 0 && (
+            <div>
+              {[...Array(promptFieldsCount)].map((_, index) => (
+                <PromptleField
+                  key={index}
+                  index={index}
+                  prompts={prompts}
+                  decoys={decoys}
+                  promptFieldsCount={promptFieldsCount}
+                  setPromptFieldCount={setPromptFieldCount}
+                  setPrompts={setPrompts}
+                  setDecoys={setDecoys}
+                />
+              ))}
+            </div>
           )}
-        </div>
-        <div className="font-light text-xs mb-2 text-gray-500">
-          Create or edit each prompt and decoy manually
-        </div>
-        {promptFieldsCount > 0 && (
-          <div>
-            {[...Array(promptFieldsCount)].map((_, index) => (
-              <PromptleField
-                key={index}
-                index={index}
-                prompts={prompts}
-                decoys={decoys}
-                promptFieldsCount={promptFieldsCount}
-                setPromptFieldCount={setPromptFieldCount}
-                setPrompts={setPrompts}
-                setDecoys={setDecoys}
-              />
-            ))}
-          </div>
-        )}
 
-        <AddPromptField
-          promptFieldsCount={promptFieldsCount}
-          setPromptFieldCount={setPromptFieldCount}
-        />
-        <div className="mt-2">
-          <div className="flex">
-            <Timer className="w-4 h-4 " />
-            <div className="text-sm font-semibold">Time given</div>
-          </div>
-          <div className="text-xs font-light text-gray-500 mb-1">
-            Set the time given to solve for each prompt
-          </div>
-          <Input
-            placeholder="Time Given"
-            type="number"
-            onChange={(e) => setTimeGiven(Number(e.target.value))}
-            value={timeGiven}
+          <AddPromptField
+            promptFieldsCount={promptFieldsCount}
+            setPromptFieldCount={setPromptFieldCount}
           />
-        </div>
+          <div className="mt-2">
+            <div className="flex">
+              <Timer className="w-4 h-4 " />
+              <div className="text-sm font-semibold">Time given</div>
+            </div>
+            <div className="text-xs font-light text-gray-500 mb-1">
+              Set the time given to solve for each prompt
+            </div>
+            <Input
+              placeholder="Time Given"
+              type="number"
+              onChange={(e) => setTimeGiven(Number(e.target.value))}
+              value={timeGiven}
+            />
+          </div>
 
-        <div className="mt-2">
-          {loading ? (
-            <Button className="mt-2 w-full" disabled>
-              <LoaderCircle size={20} className="animate-spin text-white" />
-            </Button>
-          ) : (
-            <Button className="mt-2 w-full" onClick={onSubmit}>
-              Create
-            </Button>
-          )}
+          <div className="mt-2">
+            {loading ? (
+              <Button className="mt-2 w-full" disabled>
+                <LoaderCircle size={20} className="animate-spin text-white" />
+              </Button>
+            ) : (
+              <Button className="mt-2 w-full" onClick={onSubmit}>
+                Create
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </>

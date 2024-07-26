@@ -91,7 +91,7 @@ export default function WordSelector({
             className="px-6  m-1 rounded-md border bg-slate-50 col-span-3  text-center"
             onClick={() => handleOptionClick(wordoption)}
           >
-            <p className="font-medium ">{wordoption}</p>
+            <p className="font-medium">{wordoption}</p>
           </Button>
         ))}
       </div>
