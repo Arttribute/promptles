@@ -50,7 +50,7 @@ export default function Promptle({
     }
   };
   return (
-    <div className="flex flex-col items-center justify-cente">
+    <div className="flex flex-col items-center justify-center">
       <ImagesDisplay images={promptle.images} />
       {secondsLeft > 0 && !isCorrect && (
         <WordSelector
