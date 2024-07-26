@@ -28,7 +28,7 @@ export default function PromptleForm() {
   const [numberOfImages, setNumberOfImages] = useState(1);
   const [loadingPrompts, setLoadingPrompts] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
-  const [timeGiven, setTimeGiven] = useState(20);
+  const [timeGiven, setTimeGiven] = useState(30);
 
   const router = useRouter();
 
