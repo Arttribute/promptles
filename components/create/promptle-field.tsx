@@ -82,6 +82,7 @@ export default function PromptleField({
                 setPrompts([...prompts]);
               }}
               className="col-span-5 mb-1 w-full"
+              value={prompts[index]}
             />
             <Input
               type="text"
@@ -92,6 +93,7 @@ export default function PromptleField({
                 setDecoys([...decoys]);
               }}
               className="col-span-7 mb-1 w-full"
+              value={decoys[index]}
             />
           </div>
           {index > 0 && (
