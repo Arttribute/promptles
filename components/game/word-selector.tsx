@@ -88,7 +88,7 @@ export default function WordSelector({
           <Button
             key={index}
             variant="ghost"
-            className="px-6  m-1 rounded-md border bg-slate-50 col-span-4 md:col-span-3  text-center"
+            className="px-6  m-1 rounded-md border bg-slate-50 col-span-3  text-center"
             onClick={() => handleOptionClick(wordoption)}
           >
             <p className="font-medium ">{wordoption}</p>
