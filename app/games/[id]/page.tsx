@@ -3,7 +3,7 @@ import { useState, useEffect, use } from "react";
 import { User } from "@/models/User";
 import axios from "axios";
 
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Timer } from "lucide-react";
 import AppBar from "@/components/layout/appbar";
 
 import Promptle from "@/components/game/promptle";
@@ -145,7 +145,7 @@ export default function Game({ params }: { params: { id: string } }) {
   return (
     <>
       <AppBar />
-      <div className="flex flex-col items-center justify-center mt-6 h-screen">
+      <div className="flex flex-col items-center justify-center mt-16 lg:h-screen">
         {loading ? (
           <LoaderCircle size={40} className="animate-spin text-gray-500" />
         ) : (
@@ -154,7 +154,26 @@ export default function Game({ params }: { params: { id: string } }) {
             <>
               {currentPromptleIndex > -1 && (
                 <div className="grid grid-cols-12 gap-2">
-                  <div className="col-span-10">
+                  <div className="lg:hidden col-span-12 m-2">
+                    {currentPromptleIndex !== promptleCount && (
+                      <div className="flex">
+                        <div className="mt-4 w-24 border rounded-lg p-1.5">
+                          <Timer className="h-4 w-4" />
+                          <PromptleTimer
+                            initialSeconds={(game as any)?.game.time_given}
+                            secondsLeft={secondsLeft}
+                            setSecondsLeft={setSecondsLeft}
+                            isActive={isTimerActive}
+                            setIsActive={setIsTimerActive}
+                          />
+                        </div>
+                        <div className="ml-auto w-28">
+                          <ScoreDisplay score={score} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="col-span-12 lg:col-span-10">
                     {(game as any)?.promptles.map(
                       (promptle: any, index: number) => (
                         <div key={promptle._id} className="mt-4">
@@ -174,7 +193,8 @@ export default function Game({ params }: { params: { id: string } }) {
                       )
                     )}
                   </div>
-                  <div className="col-span-2 mt-4">
+
+                  <div className="hidden lg:block col-span-2 mt-4">
                     {currentPromptleIndex !== promptleCount && (
                       <>
                         <PromptleTimer

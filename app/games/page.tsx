@@ -73,11 +73,13 @@ export default function Games() {
           </TabsContent>
           <TabsContent value="my-games">
             <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-12 text-center mt-6">
-                <Link href="/create">
-                  <Button className="ml-2 mb-2 px-8">Create New Game</Button>
-                </Link>
-              </div>
+              {myGames.length > 0 && (
+                <div className="col-span-12 text-center mt-6">
+                  <Link href="/create">
+                    <Button className="ml-2 mb-2 px-8">Create New Game</Button>
+                  </Link>
+                </div>
+              )}
 
               {loadinigGames && (
                 <div className="col-span-12 flex flex-col items-center justify-center mt-6">
@@ -102,7 +104,7 @@ export default function Games() {
                   </div>
                   <div className="mt-6">
                     <Link href="/create">
-                      <Button className="ml-2 px-8">Create Promptles</Button>
+                      <Button className="ml-2 px-8">Create New Game</Button>
                     </Link>
                   </div>
                 </div>
