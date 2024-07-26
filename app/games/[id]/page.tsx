@@ -154,11 +154,11 @@ export default function Game({ params }: { params: { id: string } }) {
             <>
               {currentPromptleIndex > -1 && (
                 <div className="grid grid-cols-12 gap-2">
-                  <div className="lg:hidden col-span-12 m-2">
+                  <div className="lg:hidden col-span-12 m-2 -mt-4">
                     {currentPromptleIndex !== promptleCount && (
                       <div className="flex">
                         <div className="mt-4 w-24 border rounded-lg p-1.5">
-                          <Timer className="h-4 w-4" />
+                          <Timer className="-mb-2 h-4 w-4" />
                           <PromptleTimer
                             initialSeconds={(game as any)?.game.time_given}
                             secondsLeft={secondsLeft}
@@ -176,7 +176,7 @@ export default function Game({ params }: { params: { id: string } }) {
                   <div className="col-span-12 lg:col-span-10">
                     {(game as any)?.promptles.map(
                       (promptle: any, index: number) => (
-                        <div key={promptle._id} className="mt-4">
+                        <div key={promptle._id} className="-mt-1 lg:mt-4">
                           {index === currentPromptleIndex && (
                             <Promptle
                               promptle={promptle}
