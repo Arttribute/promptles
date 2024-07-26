@@ -52,14 +52,14 @@ export default function GameEndDisplay({
 
               <p className="text-3xl font-bold ">{score}</p>
               <p className="text-sm font-semibold">Your Score</p>
-              {isFirstPlay && (
-                <EnterLeaderboard
-                  score={score}
-                  onchainGameIndex={onchainGameIndex}
-                  offchainGameId={offchainGameId}
-                  playerId={playerId}
-                />
-              )}
+
+              <EnterLeaderboard
+                score={score}
+                onchainGameIndex={onchainGameIndex}
+                offchainGameId={offchainGameId}
+                playerId={playerId}
+              />
+
               <div className="mt-12">
                 <Link href="/games">
                   <Button variant="outline" className="rounded-lg mt-1">

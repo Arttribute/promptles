@@ -27,16 +27,16 @@ export default function EnterLeaderboard({
 
   const enterOnchainLeaderboard = async () => {
     setLoading(true);
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
+    // const web3Modal = new Web3Modal();
+    // const connection = await web3Modal.connect();
 
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-    const leaderboardsContract = new ethers.Contract(
-      ArbitrumSepolia.PromptleLeaderboards,
-      LeaderboardsAbi,
-      signer
-    );
+    // const provider = new ethers.BrowserProvider(connection);
+    // const signer = await provider.getSigner();
+    // const leaderboardsContract = new ethers.Contract(
+    //   ArbitrumSepolia.PromptleLeaderboards,
+    //   LeaderboardsAbi,
+    //   signer
+    // );
 
     try {
       const scoreData = {
@@ -48,8 +48,8 @@ export default function EnterLeaderboard({
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/scores`,
         { scoreData }
       );
-      const actualGameindex = onchainGameIndex === 0 ? 0 : onchainGameIndex - 1;
-      const tx = await leaderboardsContract.addScore(actualGameindex, score);
+      //const actualGameindex = onchainGameIndex === 0 ? 0 : onchainGameIndex - 1;
+      //const tx = await leaderboardsContract.addScore(actualGameindex, score);
       //await tx.wait();
       setLoading(false);
       setScoreAdded(true);
