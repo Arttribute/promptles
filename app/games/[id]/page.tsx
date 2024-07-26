@@ -145,7 +145,7 @@ export default function Game({ params }: { params: { id: string } }) {
   return (
     <>
       <AppBar />
-      <div className="flex flex-col items-center justify-center mt-12 lg:h-screen">
+      <div className="flex flex-col items-center justify-center mt-16 lg:h-screen">
         {loading ? (
           <LoaderCircle size={40} className="animate-spin text-gray-500" />
         ) : (
@@ -154,7 +154,7 @@ export default function Game({ params }: { params: { id: string } }) {
             <>
               {currentPromptleIndex > -1 && (
                 <div className="grid grid-cols-12 gap-2">
-                  <div className="lg:hidden col-span-12 m-2">
+                  <div className="lg:hidden col-span-12 m-2 -mt-4">
                     {currentPromptleIndex !== promptleCount && (
                       <div className="flex">
                         <div className="mt-4 w-24 border rounded-lg p-1.5">
