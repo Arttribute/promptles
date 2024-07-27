@@ -13,6 +13,8 @@ import axios from "axios";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
+import Link from "next/link";
+
 export function ModelSelector({
   setSelectedModelId,
 }: {
@@ -44,7 +46,17 @@ export function ModelSelector({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Custom Models made by Artists</SelectLabel>
+          <SelectLabel className="flex">
+            <div className="mr-4">Custom Models made by Artists</div>
+            <Link
+              href="https://studio.arttribute.io/tunedmodels/create"
+              target="_blank"
+            >
+              <p className="text-sm font-soft text-gray-500 ml-auto">
+                Create your own model
+              </p>
+            </Link>
+          </SelectLabel>
           {loadingModels && (
             <div className="flex items-center justify-center text-sm font-soft text-gray-500">
               Loading models...
