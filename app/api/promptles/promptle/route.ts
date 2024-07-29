@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Promptle from "@/models/Promptle";
 import { NextResponse } from "next/server";
-
+export const revalidate = 0;
 export async function GET(request: Request) {
   try {
     await dbConnect();

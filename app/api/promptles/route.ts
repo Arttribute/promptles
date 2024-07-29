@@ -1,11 +1,12 @@
 import User from "@/models/User";
 
-//example tunne
+//example tune
 import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import Promptle from "@/models/Promptle";
 
 const API_KEY = process.env.ASTRIA_API_KEY;
+export const revalidate = 0;
 
 export async function GET() {
   try {

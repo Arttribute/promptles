@@ -1,3 +1,4 @@
+export const revalidate = 0;
 const API_KEY = process.env.ASTRIA_API_KEY;
 
 export async function GET(request: Request) {
